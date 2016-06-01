@@ -45,9 +45,13 @@ public class BungeePortals extends JavaPlugin {
         logger.log(Level.INFO, "[BungeePortals] Plugin channel registered!");
         loadConfigFiles();
         loadPortalsData();
-        int interval = configFile.getInt("SaveTask.Interval") * 20;
-        new SaveTask(this).runTaskTimer(this, interval, interval);
-        logger.log(Level.INFO, "[BungeePortals] Save task started!");
+        if (configFile.getBoolean("SaveTask.Enable", false)) {
+	        int interval = configFile.getInt("SaveTask.Interval") * 20;
+	        if (interval > 0) {
+		        new SaveTask(this).runTaskTimer(this, interval, interval);
+		        logger.log(Level.INFO, "[BungeePortals] Save task started!");
+	        }
+        }
         logger.log(Level.INFO, "[BungeePortals] Version " + getDescription().getVersion() + " has been enabled. (" + (System.currentTimeMillis() - time) + "ms)");
     }
 
@@ -65,6 +69,10 @@ public class BungeePortals extends JavaPlugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public void log(String text) {
+        logger.log(Level.SEVERE, "[BungeePortals] " + text);
     }
 
     private void createConfigFile(InputStream in, File file) {

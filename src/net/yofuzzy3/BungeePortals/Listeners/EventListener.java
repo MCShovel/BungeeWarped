@@ -7,19 +7,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.yofuzzy3.BungeePortals.BungeePortals;
+import net.yofuzzy3.BungeePortals.Storage.PlayerDataStore;
+
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+
 
 public class EventListener implements Listener {
 
     private BungeePortals plugin;
     private Map<String, Boolean> statusData = new HashMap<>();
+    private PlayerDataStore dataStore;
 
     public EventListener(BungeePortals plugin) {
         this.plugin = plugin;
+        dataStore = new PlayerDataStore(plugin);
+    }
+    
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlayerJoinEvent(PlayerJoinEvent e) {
+    	this.dataStore.handlePlayerJoin(e);
     }
 
     @EventHandler
@@ -29,13 +41,14 @@ public class EventListener implements Listener {
         if (!statusData.containsKey(playerName)) {
             statusData.put(playerName, false);
         }
-        Block block = player.getWorld().getBlockAt(player.getLocation());
-        String data = block.getWorld().getName() + "#" + String.valueOf(block.getX()) + "#" + String.valueOf(block.getY()) + "#" + String.valueOf(block.getZ());
+        Block block = player.getLocation().getBlock();
+        String data = player.getWorld().getName() + "#" + String.valueOf(block.getX()) + "#" + String.valueOf(block.getY()) + "#" + String.valueOf(block.getZ());
         if (plugin.portalData.containsKey(data)) {
             if (!statusData.get(playerName)) {
                 statusData.put(playerName, true);
                 String destination = plugin.portalData.get(data);
-                if (player.hasPermission("BungeePortals.portal." + destination) || player.hasPermission("BungeePortals.portal.*")) {
+                destination = this.dataStore.handlePlayerInPortal(player, destination);
+                if (player.hasPermission("BungeePortals.portal.*") || player.hasPermission("BungeePortals.portal." + destination)) {
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     DataOutputStream dos = new DataOutputStream(baos);
                     dos.writeUTF("Connect");
