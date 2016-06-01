@@ -1,0 +1,57 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>net.yofuzzy3.BungeePortals</groupId>
+    <artifactId>BungeePortals</artifactId>
+    <version>1.2.0</version>
+    <name>BungeePortals</name>
+
+    <build>
+        <finalName>${project.name}</finalName>
+        <sourceDirectory>./src/</sourceDirectory>
+
+        <!-- Resources -->
+        <resources>
+            <resource>
+                <targetPath>.</targetPath>
+                <filtering>true</filtering>
+                <directory>${basedir}/src</directory>
+                <includes>
+                    <include>config.yml</include>
+                    <include>plugin.yml</include>
+                    <include>portals.yml</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+    <!-- Dependencies -->
+    <dependencies>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>1.9-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>/opt/msm/src/spigot/craftbukkit.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>net.milkbowl.vault</groupId>
+            <artifactId>Vault</artifactId>
+            <version>1.2.32</version>
+            <scope>system</scope>
+            <systemPath>/opt/msm/plugins/Vault/Vault.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.sk89q.worldedit</groupId>
+            <artifactId>worldedit-bukkit</artifactId>
+            <version>14.6</version>
+            <scope>system</scope>
+            <systemPath>/opt/msm/plugins/worldedit-bukkit/worldedit-bukkit.jar</systemPath>
+        </dependency>
+    </dependencies>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+    </properties>
+
+</project>
