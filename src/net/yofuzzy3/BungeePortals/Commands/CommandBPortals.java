@@ -64,6 +64,10 @@ public class CommandBPortals implements CommandExecutor {
         	this.createPortal(sender, args);
         	return true;
         }
+        else if (args.length == 2 && args[0].equalsIgnoreCase("tp")) {
+        	this.teleportPlayer(sender, args);
+        	return true;
+        }
         else if (args.length == 3 && args[0].equalsIgnoreCase("dest")) {
         	this.createDestination(sender, args);
         	return true;
@@ -82,6 +86,7 @@ public class CommandBPortals implements CommandExecutor {
         sender.sendMessage(ChatColor.GREEN + "/BPortals create <destination> " + ChatColor.RED + "Create portals.");
         sender.sendMessage(ChatColor.GREEN + "/BPortals remove <destination> " + ChatColor.RED + "Remove portals.");
         sender.sendMessage(ChatColor.GREEN + "/BPortals dest <server> <name>" + ChatColor.RED + "Create destination.");
+        sender.sendMessage(ChatColor.GREEN + "/BPortals tp <name>" + ChatColor.RED + "Go to destination.");
         sender.sendMessage(ChatColor.BLUE + "Visit www.spigotmc.org/resources/bungeeportals.19 for help.");
 	}
 
@@ -171,7 +176,8 @@ public class CommandBPortals implements CommandExecutor {
     		loc.getZ(),
     		loc.getPitch(),
     		loc.getYaw()
-		);		
+		);	
+        sender.sendMessage(ChatColor.GREEN + " portal destination created.");
 	}
 	
 	private void createPortal(CommandSender sender, String[] args) {
@@ -216,5 +222,13 @@ public class CommandBPortals implements CommandExecutor {
         }
         sender.sendMessage(ChatColor.GREEN + String.valueOf(count) + " portals have been removed.");
 	}
-	
+
+	private void teleportPlayer(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(ChatColor.RED + "Only players can use that command.");
+            return;
+        }
+    	
+		dataStore.handlePlayerTeleport((Player)sender, args[1]);
+	}
 }

@@ -1,10 +1,14 @@
 package net.yofuzzy3.BungeePortals.Storage;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -112,37 +116,61 @@ public class PortalDataStore {
 		}
     }
     
-    public String handlePlayerInPortal(Player player, String destName) {
+    public void handlePlayerTeleport(Player player, String destName) {
 
     	NamedDestination dest = this.getDestination(destName);
     	
-        if (dest.name != null && dest.name.equalsIgnoreCase(destName) && 
-        		(player.hasPermission("BungeePortals.portal.*") || player.hasPermission("BungeePortals.portal." + destName))) {
-
-        	String uuid = player.getUniqueId().toString();
-        	this.database.execute(
-    			"INSERT INTO `bportal_teleports` \n" +
-        			"(`bp_playerUUID`, `bp_serverName`, `bp_worldName`, `bp_posX`, `bp_posY`, `bp_posZ`, `bp_pitch`, `bp_yaw`) \n" +
-        			"VALUES ( \n" +
-        			"'" + uuid + "', \n" +
-        			"'" + dest.serverName + "', \n" +
-        			"'" + dest.worldName + "', \n" +
-        			dest.X + ", \n" +
-        			dest.Y + ", \n" +
-        			dest.Z + ", \n" +
-        			dest.pitch + ", \n" +
-        			dest.yaw + " ) \n" +
-        			"ON DUPLICATE KEY UPDATE \n" +
-        			"bp_worldName = '" + dest.worldName + "', \n" +
-        			"bp_posX = " + dest.X + ", \n" +
-        			"bp_posY = " + dest.Y + ", \n" +
-        			"bp_posZ = " + dest.Z + ", \n" +
-        			"bp_pitch = " + dest.pitch + ", \n" +
-        			"bp_yaw = " + dest.yaw + "; \n"
-        			);
+        if (dest.name == null || !dest.name.equalsIgnoreCase(destName)) {
+        	player.sendMessage(ChatColor.RED + "The destination '" + destName + "' does not exist.");
+        }
+        else if(!player.hasPermission("BungeePortals.portal.*") && !player.hasPermission("BungeePortals.portal." + dest.name)) {
+    	    player.sendMessage(plugin.configFile.getString("NoPortalPermissionMessage").replace("{destination}", dest.name).replaceAll("(&([a-f0-9l-or]))", "\u00A7$2"));
+            return;
         }
         
-        return dest.serverName;
+    	World localtp = player.getServer().getWorld(dest.worldName);
+    	if (localtp != null) {
+    		Location loc = new Location(localtp, dest.X, dest.Y, dest.Z);
+    	    loc.setPitch(dest.pitch);
+    	    loc.setYaw(dest.yaw);
+    	    player.teleport(loc, TeleportCause.PLUGIN);
+    	    return;
+    	}
+    	
+    	String uuid = player.getUniqueId().toString();
+    	this.database.execute(
+			"INSERT INTO `bportal_teleports` \n" +
+    			"(`bp_playerUUID`, `bp_serverName`, `bp_worldName`, `bp_posX`, `bp_posY`, `bp_posZ`, `bp_pitch`, `bp_yaw`) \n" +
+    			"VALUES ( \n" +
+    			"'" + uuid + "', \n" +
+    			"'" + dest.serverName + "', \n" +
+    			"'" + dest.worldName + "', \n" +
+    			dest.X + ", \n" +
+    			dest.Y + ", \n" +
+    			dest.Z + ", \n" +
+    			dest.pitch + ", \n" +
+    			dest.yaw + " ) \n" +
+    			"ON DUPLICATE KEY UPDATE \n" +
+    			"bp_worldName = '" + dest.worldName + "', \n" +
+    			"bp_posX = " + dest.X + ", \n" +
+    			"bp_posY = " + dest.Y + ", \n" +
+    			"bp_posZ = " + dest.Z + ", \n" +
+    			"bp_pitch = " + dest.pitch + ", \n" +
+    			"bp_yaw = " + dest.yaw + "; \n"
+    			);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream dos = new DataOutputStream(baos);
+        try {
+            dos.writeUTF("Connect");
+			dos.writeUTF(dest.name);
+            player.sendPluginMessage(plugin, "BungeeCord", baos.toByteArray());
+            baos.close();
+            dos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    
     }
 
 	public void addPortalBlock(String block, String destName) {
