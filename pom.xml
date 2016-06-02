@@ -33,13 +33,6 @@
             <systemPath>/opt/msm/src/spigot/craftbukkit.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>net.milkbowl.vault</groupId>
-            <artifactId>Vault</artifactId>
-            <version>1.2.32</version>
-            <scope>system</scope>
-            <systemPath>/opt/msm/plugins/Vault/Vault.jar</systemPath>
-        </dependency>
-        <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
             <version>14.6</version>
