@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.yofuzzy3.BungeePortals.BungeePortals;
-import net.yofuzzy3.BungeePortals.Storage.PlayerDataStore;
+import net.yofuzzy3.BungeePortals.Storage.PortalDataStore;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -22,11 +22,11 @@ public class EventListener implements Listener {
 
     private BungeePortals plugin;
     private Map<String, Boolean> statusData = new HashMap<>();
-    private PlayerDataStore dataStore;
+    private PortalDataStore dataStore;
 
-    public EventListener(BungeePortals plugin) {
+    public EventListener(BungeePortals plugin, PortalDataStore dataStore) {
         this.plugin = plugin;
-        dataStore = new PlayerDataStore(plugin);
+        this.dataStore = dataStore;
     }
     
     @EventHandler(priority = EventPriority.LOW)
