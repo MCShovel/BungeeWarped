@@ -163,7 +163,7 @@ public class PortalDataStore {
         DataOutputStream dos = new DataOutputStream(baos);
         try {
             dos.writeUTF("Connect");
-			dos.writeUTF(dest.worldName);
+			dos.writeUTF(dest.serverName);
             player.sendPluginMessage(plugin, "BungeeCord", baos.toByteArray());
             baos.close();
             dos.close();
