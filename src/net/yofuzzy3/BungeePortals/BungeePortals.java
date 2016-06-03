@@ -90,12 +90,6 @@ public class BungeePortals extends JavaPlugin {
         }
         configFile = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "config.yml"));
         logger.log(Level.INFO, "[BungeePortals] Configuration file config.yml loaded!");
-        File pFile = new File(getDataFolder(), "portals.yml");
-        if (!pFile.exists()) {
-            pFile.getParentFile().mkdirs();
-            createConfigFile(getResource("portals.yml"), pFile);
-            logger.log(Level.INFO, "[BungeePortals] Configuration file portals.yml created!");
-        }
 
         dataStore.initialize();
     }

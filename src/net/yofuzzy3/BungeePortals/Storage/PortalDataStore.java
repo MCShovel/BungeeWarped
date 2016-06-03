@@ -198,10 +198,16 @@ public class PortalDataStore {
 	    try {
 		    ResultSet result = this.database.select(
 		    		"SELECT `bp_block`, `bp_destination` FROM `bportal_portals`;");
+		    try {
+				while (result.next()) {
+					portalData.put(result.getString(1), result.getString(2));
+				}
+		    }
+		    finally {
+		    	result.close();
+		    }
 		    
-			while (result.next()) {
-				portalData.put(result.getString(0), result.getString(1));
-			}
+			plugin.log("Loaded portal locations: " + String.valueOf(portalData.size()));
 			return portalData;
 		} catch (SQLException e1) {
         	plugin.log("SQLException! " + e1.getMessage());
