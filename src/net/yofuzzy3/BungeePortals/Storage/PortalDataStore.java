@@ -1,6 +1,6 @@
 package net.yofuzzy3.BungeePortals.Storage;
 
-import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayOutputStream;		
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -159,18 +159,18 @@ public class PortalDataStore {
     			"bp_yaw = " + dest.yaw + "; \n"
     			);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        DataOutputStream dos = new DataOutputStream(baos);
-        try {
-            dos.writeUTF("Connect");
+    	try {
+	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	        DataOutputStream dos = new DataOutputStream(baos);
+	        dos.writeUTF("Connect");
 			dos.writeUTF(dest.serverName);
-            player.sendPluginMessage(plugin, "BungeeCord", baos.toByteArray());
-            baos.close();
-            dos.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-    
+	        player.sendPluginMessage(plugin, "BungeeCord", baos.toByteArray());
+	        baos.close();
+	        dos.close();
+    	}
+    	catch (Exception e) {
+        	plugin.log("Exception! " + e.toString());
+    	}
     }
 
 	public void addPortalBlock(String block, String destName) {
