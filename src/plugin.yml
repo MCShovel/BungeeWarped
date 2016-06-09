@@ -1,18 +1,267 @@
 name: BungeeWarped
 version: 0.8
 description: Create portals of any shape or size with WorldEdit, for BungeeCord.
-author: MCShovel, YoFuzzy3
+author: MCShovel
 main: com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin
 dev-url: https://github.com/MCShovel/BungeeWarped
 softdepend: [WorldEdit]
 
 commands:
-    bw:
-        description: Administration help and commands.
+    portal:
+        description: 'Administration help and commands.'
+        aliases: bw
+        usage: 'Use /<command> for help using this command.'
+        permission: bungeewarped.portal.cmd
+		permission-message: '§4You do not have permission to perform this action.'
+    warp:
+        description: 'Teleports you to a warp by name, or lists the warps available.'
+        usage: 'Usage: /<command> [name]'
+        permission: bungeewarped.warp.use
+		permission-message: '§4You do not have permission to perform this action.'
+    setwarp:
+        description: 'Creates or replaces a named warp at your current position.'
+        usage: 'Usage: /<command> name'
+        permission: bungeewarped.warp.create
+		permission-message: '§4You do not have permission to perform this action.'
+    delwarp:
+        description: 'Removes a named warp if it exists.'
+        usage: 'Usage: /<command> name'
+        permission: bungeewarped.warp.delete
+		permission-message: '§4You do not have permission to perform this action.'
+    home:
+        description: 'Teleport to your home.'
+        usage: 'Usage: /<command> [name]'
+        permission: bungeewarped.home.use
+		permission-message: '§4You do not have permission to perform this action.'
+    sethome:
+        description: 'Set your home and world bedspawn to your current position.'
+        usage: 'Usage: /<command> [name]'
+        permission: bungeewarped.home.create
+		permission-message: '§4You do not have permission to perform this action.'
+    delhome:
+        description: 'Set your home and world bedspawn to your current position.'
+        usage: 'Usage: /<command> [name]'
+        permission: bungeewarped.home.delete
+		permission-message: '§4You do not have permission to perform this action.'
+    tpo:
+        description: 'Force teleport to another player.'
+        usage: 'Usage: /<command> [player]'
+        permission: bungeewarped.op.tp
+		permission-message: '§4You do not have permission to perform this action.'
+    tpa:
+        description: 'Request to teleport to another player.'
+        usage: 'Usage: /<command> player'
+        permission: bungeewarped.tp.there
+		permission-message: '§4You do not have permission to perform this action.'
+    tpahere:
+        description: 'Request another player to teleport to you.'
+        usage: 'Usage: /<command> player'
+        permission: bungeewarped.tp.here
+		permission-message: '§4You do not have permission to perform this action.'
+    tpaccept:
+        description: 'Accept the pending teleport request.'
+        usage: 'Usage: /<command>'
+        permission: bungeewarped.tp.accept
+		permission-message: '§4You do not have permission to perform this action.'
+    tpdeny:
+        description: 'Deny the pending teleport request.'
+        usage: 'Usage: /<command>'
+        permission: bungeewarped.tp.deny
+		permission-message: '§4You do not have permission to perform this action.'
+    tptoggle:
+        description: 'Stop recieving teleport requests.'
+        usage: 'Usage: /<command>'
+        permission: bungeewarped.tp.toggle
+		permission-message: '§4You do not have permission to perform this action.'
+
 permissions:
-    bungeewarped.admin:
-        description: Allowed to access the command /bw
+    bungeewarped.*:
+        description: Gives access to all commands
         default: op
-    bungeewarped.portal.*:
-        description: Access to all portals.
+        children:
+            bungeewarped.op.*: true
+    bungeewarped.op.*:
+        description: Gives access to all admin commands
+        default: op
+        children:
+            bungeewarped.op.bypass: true
+            bungeewarped.op.portal: true
+            bungeewarped.op.warp: true
+            bungeewarped.op.home: true
+            bungeewarped.op.tp: true
+
+    bungeewarped.op.bypass.*:
+        description: Allows operators to bypass timeouts
+        default: op
+        children:
+            bungeewarped.op.bypass.homedelay: true
+            bungeewarped.op.bypass.portaldelay: true
+            bungeewarped.op.bypass.warpdelay: true
+            bungeewarped.op.bypass.tpdelay: true
+            bungeewarped.op.bypass.combatdelay: true
+
+    bungeewarped.op.bypass.homedelay:
+        description: Allows operators to bypass warmup/cooldown of /home
+        default: op
+    bungeewarped.op.bypass.portaldelay:
+        description: Allows operators to bypass warmup/cooldown of portal use
+        default: op
+    bungeewarped.op.bypass.warpdelay:
+        description: Allows operators to bypass warmup/cooldown of /warp use
+        default: op
+    bungeewarped.op.bypass.tpdelay:
+        description: Allows operators to bypass warmup/cooldown of /tpa use
+        default: op
+    bungeewarped.op.bypass.combatdelay:
+        description: Allows operators to bypass the combat delay
+        default: op
+
+    bungeewarped.op.home:
+        description: 'Access to list, tp, move, or delete other player homes.'
+        default: op
+
+    bungeewarped.op.tp:
+        description: 'Access to /tpo to force teleport players.'
+        default: op
+
+#Portal Related perms
+    bungeewarped.op.portal:
+        description: 'Allowes to access create portals.'
+        default: op
+        children:
+            bungeewarped.portal.cmd: true
+            bungeewarped.portal.use: true
+            bungeewarped.portal.create: true
+            bungeewarped.portal.delete: true
+            bungeewarped.op.warp: true
+
+    bungeewarped.portal.use:
+        description: 'Access to use portals.'
+        default: op
+    bungeewarped.portal.create:
+        description: 'Access to create/move portals.'
+        default: op
+        children:
+            bungeewarped.portal.cmd: true
+    bungeewarped.portal.delete:
+        description: 'Access to remove portals.'
+        default: op
+        children:
+            bungeewarped.portal.cmd: true
+    bungeewarped.portal.cmd:
+        description: 'Access to /portal command.'
+        default: op
+
+#Warp location perms
+    bungeewarped.op.warp:
+        description: 'Allowes to access create warps and portals.'
+        default: op
+        children:
+            bungeewarped.warp.use: true
+            bungeewarped.warp.create: true
+            bungeewarped.warp.delete: true
+            bungeewarped.warp.list: true
+            bungeewarped.warp.location.*: true
+
+    bungeewarped.warp.use:
+        description: 'Access to the /warp command.'
+        default: false
+    bungeewarped.warp.create:
+        description: 'Access to create/move warps.'
+        default: false
+    bungeewarped.warp.delete:
+        description: 'Access to remove warps.'
+        default: false
+    bungeewarped.warp.list:
+        description: 'Access to list available warps.'
+        default: false
+    bungeewarped.warp.location.*:
+        description: 'Access to all warp/portal locations.'
         default: true
+
+#General User permissions
+    bungeewarped.user.*:
+        description: 'Allowes to access use homes, warps, portals, and tpa.'
+        default: false
+        children:
+            bungeewarped.user.portals: true
+            bungeewarped.user.warps: true
+            bungeewarped.user.home: true
+            bungeewarped.user.tp: true
+
+    bungeewarped.user.portals:
+        description: 'Allowes to access use portals.'
+        default: false
+        children:
+            bungeewarped.portal.use: true
+            bungeewarped.warp.location.*: true
+
+    bungeewarped.user.warps:
+        description: 'Allowes to access use warps.'
+        default: false
+        children:
+            bungeewarped.warp.use: true
+            bungeewarped.warp.location.*: true
+
+    bungeewarped.user.home:
+        description: 'Allowes to access use homes.'
+        default: false
+        children:
+            bungeewarped.home.*: true
+
+    bungeewarped.user.tp:
+        description: 'Allowes to access use tpa/tpahere.'
+        default: false
+        children:
+            bungeewarped.tp.*: true
+
+#Home user permissions
+    bungeewarped.home.*:
+        description: 'Access to use home commands.'
+        default: false
+        children:
+            bungeewarped.home.use: true
+            bungeewarped.home.create: true
+            bungeewarped.home.delete: true
+    bungeewarped.home.tp:
+        description: 'Access to use /home command.'
+        default: false
+    bungeewarped.home.set:
+        description: 'Access to use /sethome command.'
+        default: false
+    bungeewarped.home.delete:
+        description: 'Access to use /delhome command.'
+        default: false
+
+#Teleport player permissions
+    bungeewarped.user.tp:
+        description: 'Access to use home commands.'
+        default: false
+        children:
+            bungeewarped.tp.there: true
+            bungeewarped.tp.here: true
+            bungeewarped.user.tptarget: true
+
+    bungeewarped.user.tptarget:
+        description: 'Access to accept/deny requests.'
+        default: false
+        children:
+            bungeewarped.tp.accept: true
+            bungeewarped.tp.deny: true
+            bungeewarped.tp.toggle: true
+
+    bungeewarped.tp.there:
+        description: 'Access to use /tpa command.'
+        default: false
+    bungeewarped.tp.here:
+        description: 'Access to use /tpahere command.'
+        default: false
+    bungeewarped.tp.accept:
+        description: 'Access to use /tpaccept command.'
+        default: false
+    bungeewarped.tp.deny:
+        description: 'Access to use /tpdeny command.'
+        default: false
+    bungeewarped.tp.toggle:
+        description: 'Access to use /tptoggle command.'
+        default: false
