@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -30,7 +31,7 @@ public class PortalDataStore {
 			database.close();
 		}
 		
-        this.plugin.log("Initializing Database Connection...");
+        this.plugin.log(Level.INFO, "Initializing Database Connection...");
         this.database = new MySQLCore(plugin, 
     		plugin.configFile.getString("mysql.host", "localhost"),
     		plugin.configFile.getString("mysql.database", "bportals"), 
@@ -40,7 +41,7 @@ public class PortalDataStore {
 		);
 
         if (!this.database.existsTable("bportal_teleports")) {
-        	this.plugin.log("Creating bportal_teleports Schema...");
+        	this.plugin.log(Level.INFO, "Creating bportal_teleports Schema...");
         	this.database.execute(
     		"CREATE TABLE `bportal_teleports` ( \n" +
             "  `bp_playerUUID` VARCHAR(40) NOT NULL, \n" +
@@ -55,7 +56,7 @@ public class PortalDataStore {
 			"");
     	}
         if (!this.database.existsTable("bportal_destinations")) {
-        	this.plugin.log("Creating bportal_destinations Schema...");
+        	this.plugin.log(Level.WARNING, "Creating bportal_destinations Schema...");
         	this.database.execute(
     		"CREATE TABLE `bportal_destinations` ( \n" +
             "  `bp_name` VARCHAR(40) NOT NULL, \n" +
@@ -70,7 +71,7 @@ public class PortalDataStore {
 			"");
     	}
         if (!this.database.existsTable("bportal_portals")) {
-        	this.plugin.log("Creating bportal_portals Schema...");
+        	this.plugin.log(Level.WARNING, "Creating bportal_portals Schema...");
         	this.database.execute(
     		"CREATE TABLE `bportal_portals` ( \n" +
             "  `bp_block` VARCHAR(64) NOT NULL, \n" +
@@ -78,7 +79,7 @@ public class PortalDataStore {
             "  PRIMARY KEY (`bp_block`)); \n" +
 			"");
     	}
-    	this.plugin.log("Database ready...");
+    	this.plugin.log(Level.INFO, "Database ready...");
 	}
 
     public void handlePlayerJoin(PlayerJoinEvent e) {
@@ -112,7 +113,7 @@ public class PortalDataStore {
 			    		"WHERE `bp_playerUUID` = '" + uuid + "' AND `bp_serverName` = '" + serverName + "';");
 			}
 		} catch (SQLException e1) {
-        	plugin.log("SQLException! " + e1.getMessage());
+        	plugin.log(Level.SEVERE, "SQLException! " + e1.getMessage());
 		}
     }
     
@@ -169,7 +170,7 @@ public class PortalDataStore {
 	        dos.close();
     	}
     	catch (Exception e) {
-        	plugin.log("Exception! " + e.toString());
+        	plugin.log(Level.SEVERE, "Exception! " + e.toString());
     	}
     }
 
@@ -207,10 +208,10 @@ public class PortalDataStore {
 		    	result.close();
 		    }
 		    
-			plugin.log("Loaded portal locations: " + String.valueOf(portalData.size()));
+			plugin.log(Level.INFO, "Loaded portal locations: " + String.valueOf(portalData.size()));
 			return portalData;
 		} catch (SQLException e1) {
-        	plugin.log("SQLException! " + e1.getMessage());
+        	plugin.log(Level.SEVERE, "SQLException! " + e1.getMessage());
 		}
 	    
 	    return portalData;
@@ -267,7 +268,7 @@ public class PortalDataStore {
 				}
 			}
 		} catch (SQLException e1) {
-        	plugin.log("SQLException! " + e1.getMessage());
+        	plugin.log(Level.SEVERE, "SQLException! " + e1.getMessage());
 		}
 	    
 	    return dest;

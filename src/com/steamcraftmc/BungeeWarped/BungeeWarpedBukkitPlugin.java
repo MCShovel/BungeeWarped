@@ -22,7 +22,7 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 public class BungeeWarpedBukkitPlugin extends JavaPlugin {
 
-    private Logger logger = Bukkit.getLogger();
+    private final Logger logger = Bukkit.getLogger();
     public Map<String, String> portalData = new HashMap<>();
     public PortalDataStore dataStore;
     public WorldEditPlugin worldEdit;
@@ -35,13 +35,13 @@ public class BungeeWarpedBukkitPlugin extends JavaPlugin {
         } else {
         	worldEdit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
         }
-        
+
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         logger.log(Level.INFO, "[BungeeWarped] Plugin channel registered!");
         dataStore = new PortalDataStore(this);
         loadConfigFiles();
         loadPortalsData();
-        getCommand("BPortals").setExecutor(new CommandBPortals(this, dataStore));
+        getCommand("bw").setExecutor(new CommandBPortals(this, dataStore));
         logger.log(Level.INFO, "[BungeeWarped] Commands registered!");
         getServer().getPluginManager().registerEvents(new EventListener(this, dataStore), this);
         logger.log(Level.INFO, "[BungeeWarped] Events registered!");
@@ -52,8 +52,8 @@ public class BungeeWarpedBukkitPlugin extends JavaPlugin {
         logger.log(Level.INFO, "[BungeeWarped] Version " + getDescription().getVersion() + " has been disabled.");
     }
 
-    public void log(String text) {
-        logger.log(Level.SEVERE, "[BungeeWarped] " + text);
+    public void log(Level severity, String text) {
+        logger.log(severity, "[BungeeWarped] " + text);
     }
 
     private void createConfigFile(InputStream in, File file) {

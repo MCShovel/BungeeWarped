@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
 import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
 
@@ -46,11 +47,11 @@ public class MySQLCore {
         }
         catch (ClassNotFoundException e)
         {
-        	plugin.log("ClassNotFoundException! " + e.getMessage());
+        	plugin.log(Level.SEVERE, "ClassNotFoundException! " + e.getMessage());
         }
         catch (SQLException e)
         {
-        	plugin.log("SQLException! " + e.getMessage());
+        	plugin.log(Level.SEVERE, "SQLException! " + e.getMessage());
         }
     }
 
@@ -96,7 +97,7 @@ public class MySQLCore {
         }
         catch (Exception e)
         {
-            plugin.log("Failed to close database connection! " + e.getMessage());
+            plugin.log(Level.SEVERE, "Failed to close database connection! " + e.getMessage());
         }
     }
 
@@ -114,8 +115,8 @@ public class MySQLCore {
         }
         catch (SQLException ex)
         {
-        	plugin.log("Error at SQL Query: " + ex.getMessage());
-        	plugin.log("Query: " + query);
+        	plugin.log(Level.SEVERE, "Error at SQL Query: " + ex.getMessage());
+        	plugin.log(Level.SEVERE, "Query: " + query);
             close();
         }
         return null;
@@ -136,8 +137,8 @@ public class MySQLCore {
 		{
 			if (!ex.toString().contains("not return ResultSet"))
 			{
-				plugin.log("Error at SQL INSERT Query: " + ex);
-				plugin.log("Query: " + query);
+				plugin.log(Level.SEVERE, "Error at SQL INSERT Query: " + ex);
+				plugin.log(Level.SEVERE, "Query: " + query);
 			}
 			close();
 		}
@@ -158,8 +159,8 @@ public class MySQLCore {
 		{
 			if (!ex.toString().contains("not return ResultSet"))
 			{
-				plugin.log("Error at SQL UPDATE Query: " + ex);
-				plugin.log("Query: " + query);
+				plugin.log(Level.SEVERE, "Error at SQL UPDATE Query: " + ex);
+				plugin.log(Level.SEVERE, "Query: " + query);
 			}
 			close();
 		}
@@ -180,8 +181,8 @@ public class MySQLCore {
         {
             if (!ex.toString().contains("not return ResultSet"))
             {
-            	plugin.log("Error at SQL DELETE Query: " + ex);
-            	plugin.log("Query: " + query);
+            	plugin.log(Level.SEVERE, "Error at SQL DELETE Query: " + ex);
+            	plugin.log(Level.SEVERE, "Query: " + query);
             }
             close();
         }
@@ -202,8 +203,8 @@ public class MySQLCore {
         }
         catch (SQLException ex)
         {
-        	plugin.log(ex.getMessage());
-        	plugin.log("Query: " + query);
+        	plugin.log(Level.SEVERE, ex.getMessage());
+        	plugin.log(Level.SEVERE, "Query: " + query);
             return false;
         }
     }
@@ -223,7 +224,7 @@ public class MySQLCore {
         }
         catch (SQLException e)
         {
-        	plugin.log("Failed to check if table " + table + " exists: " + e.getMessage());
+        	plugin.log(Level.SEVERE, "Failed to check if table " + table + " exists: " + e.getMessage());
             return false;
         }
     }
@@ -244,7 +245,7 @@ public class MySQLCore {
         }
         catch (Exception e)
         {
-        	plugin.log("Failed to check if column " + column + " exists in table " + table + " : " + e.getMessage());
+        	plugin.log(Level.SEVERE, "Failed to check if column " + column + " exists in table " + table + " : " + e.getMessage());
             return false;
         }
     }
