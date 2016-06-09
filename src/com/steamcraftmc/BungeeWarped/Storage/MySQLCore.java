@@ -1,18 +1,18 @@
-package net.yofuzzy3.BungeePortals.Storage;
+package com.steamcraftmc.BungeeWarped.Storage;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import net.yofuzzy3.BungeePortals.BungeePortals;
+import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
 
 /**
  * @author cc_madelg
  */
 public class MySQLCore {
 
-    private BungeePortals plugin;
+    private BungeeWarpedBukkitPlugin plugin;
     private Connection connection;
     private String host;
     private String username;
@@ -26,7 +26,7 @@ public class MySQLCore {
      * @param username
      * @param password
      */
-    public MySQLCore(BungeePortals plugin, String host, String database, int port, String username, String password)
+    public MySQLCore(BungeeWarpedBukkitPlugin plugin, String host, String database, int port, String username, String password)
     {
     	this.plugin = plugin;
         this.database = database;

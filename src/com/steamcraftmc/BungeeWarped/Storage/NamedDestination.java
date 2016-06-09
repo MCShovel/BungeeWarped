@@ -1,4 +1,4 @@
-package net.yofuzzy3.BungeePortals.Storage;
+package com.steamcraftmc.BungeeWarped.Storage;
 
 public class NamedDestination {
 	public String name;

@@ -2,30 +2,13 @@
   - delhome
   - home
   - home.others
-  - suicide
 
-  - getpos
-  - afk
-  - help
-  - info
-  - time
-  - kit
-  - near
-  - seen
-
-  - mail
-  - mail.send
-
-  - pay
-  - give
-  - sell
-  - balance
-  - balance.others
-  - balancetop
-
+  - tpo
   - tpa
-  - tpaccept
   - tpahere
+  - tpaccept
   - tpdeny
+  - tptoggle
   - warp
+  - warp.set
   - warp.list

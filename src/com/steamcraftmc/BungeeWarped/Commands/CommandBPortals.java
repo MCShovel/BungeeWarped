@@ -1,12 +1,12 @@
-	package net.yofuzzy3.BungeePortals.Commands;
+	package com.steamcraftmc.BungeeWarped.Commands;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.yofuzzy3.BungeePortals.BungeePortals;
-import net.yofuzzy3.BungeePortals.Storage.PortalDataStore;
+import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
+import com.steamcraftmc.BungeeWarped.Storage.PortalDataStore;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -22,11 +22,11 @@ import com.sk89q.worldedit.bukkit.selections.Selection;
 
 public class CommandBPortals implements CommandExecutor {
 
-    private BungeePortals plugin;
+    private BungeeWarpedBukkitPlugin plugin;
     private Map<String, List<String>> selections = new HashMap<>();
     private PortalDataStore dataStore;
 
-    public CommandBPortals(BungeePortals plugin, PortalDataStore dataStore) {
+    public CommandBPortals(BungeeWarpedBukkitPlugin plugin, PortalDataStore dataStore) {
         this.plugin = plugin;
         this.dataStore = dataStore;
     }
@@ -35,7 +35,7 @@ public class CommandBPortals implements CommandExecutor {
         if (!commandLabel.equalsIgnoreCase("BPortals")) {
             return false;
         }
-        if (!sender.hasPermission("BungeePortals.command.BPortals")) {
+        if (!sender.hasPermission("bungeewarped.admin")) {
             sender.sendMessage(ChatColor.RED + "You do not have permission to use that command.");
             return true;
         }
@@ -79,15 +79,15 @@ public class CommandBPortals implements CommandExecutor {
     }
 
 	private void doHelp(CommandSender sender) {
-        sender.sendMessage(ChatColor.BLUE + "BungeePortals v" + plugin.getDescription().getVersion() + " by YoFuzzy3");
-        sender.sendMessage(ChatColor.GREEN + "/BPortals reload " + ChatColor.RED + "Reload all files and data.");
-        sender.sendMessage(ChatColor.GREEN + "/BPortals select <filter,list> " + ChatColor.RED + "Get selection.");
-        sender.sendMessage(ChatColor.GREEN + "/BPortals clear " + ChatColor.RED + "Clear selection.");
-        sender.sendMessage(ChatColor.GREEN + "/BPortals create <destination> " + ChatColor.RED + "Create portals.");
-        sender.sendMessage(ChatColor.GREEN + "/BPortals remove <destination> " + ChatColor.RED + "Remove portals.");
-        sender.sendMessage(ChatColor.GREEN + "/BPortals dest <server> <name>" + ChatColor.RED + "Create destination.");
-        sender.sendMessage(ChatColor.GREEN + "/BPortals tp <name>" + ChatColor.RED + "Go to destination.");
-        sender.sendMessage(ChatColor.BLUE + "Visit www.spigotmc.org/resources/bungeeportals.19 for help.");
+        sender.sendMessage(ChatColor.BLUE + "BungeeWarped v" + plugin.getDescription().getVersion() + " by MCShovel");
+        sender.sendMessage(ChatColor.GREEN + "/bw reload " + ChatColor.RED + "Reload all files and data.");
+        sender.sendMessage(ChatColor.GREEN + "/bw select <filter,list> " + ChatColor.RED + "Get selection.");
+        sender.sendMessage(ChatColor.GREEN + "/bw clear " + ChatColor.RED + "Clear selection.");
+        sender.sendMessage(ChatColor.GREEN + "/bw create <destination> " + ChatColor.RED + "Create portals.");
+        sender.sendMessage(ChatColor.GREEN + "/bw remove <destination> " + ChatColor.RED + "Remove portals.");
+        sender.sendMessage(ChatColor.GREEN + "/bw dest <server> <name>" + ChatColor.RED + "Create destination.");
+        sender.sendMessage(ChatColor.GREEN + "/bw tp <name>" + ChatColor.RED + "Go to destination.");
+        sender.sendMessage(ChatColor.BLUE + "Visit http://github.com/MCShovel/BungeeWarped/wiki for help.");
 	}
 
     private void reloadConfig(CommandSender sender) {

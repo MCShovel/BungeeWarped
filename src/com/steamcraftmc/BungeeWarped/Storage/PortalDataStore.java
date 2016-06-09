@@ -1,4 +1,4 @@
-package net.yofuzzy3.BungeePortals.Storage;
+package com.steamcraftmc.BungeeWarped.Storage;
 
 import java.io.ByteArrayOutputStream;		
 import java.io.DataOutputStream;
@@ -15,13 +15,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
-import net.yofuzzy3.BungeePortals.BungeePortals;
+import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
 
 public class PortalDataStore {
-    private BungeePortals plugin;
+    private BungeeWarpedBukkitPlugin plugin;
     private MySQLCore database;
 
-	public PortalDataStore(BungeePortals plugin) {
+	public PortalDataStore(BungeeWarpedBukkitPlugin plugin) {
         this.plugin = plugin;
 	}
 	
@@ -123,7 +123,7 @@ public class PortalDataStore {
         if (dest.name == null || !dest.name.equalsIgnoreCase(destName)) {
         	player.sendMessage(ChatColor.RED + "The destination '" + destName + "' does not exist.");
         }
-        else if(!player.hasPermission("BungeePortals.portal.*") && !player.hasPermission("BungeePortals.portal." + dest.name)) {
+        else if(!player.hasPermission("bungeewarped.portal.*") && !player.hasPermission("bungeewarped.portal." + dest.name)) {
     	    player.sendMessage(plugin.configFile.getString("NoPortalPermissionMessage").replace("{destination}", dest.name).replaceAll("(&([a-f0-9l-or]))", "\u00A7$2"));
             return;
         }

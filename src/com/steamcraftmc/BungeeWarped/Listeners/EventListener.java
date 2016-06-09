@@ -1,11 +1,11 @@
-package net.yofuzzy3.BungeePortals.Listeners;
+package com.steamcraftmc.BungeeWarped.Listeners;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.yofuzzy3.BungeePortals.BungeePortals;
-import net.yofuzzy3.BungeePortals.Storage.PortalDataStore;
+import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
+import com.steamcraftmc.BungeeWarped.Storage.PortalDataStore;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -18,11 +18,11 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 public class EventListener implements Listener {
 
-    private BungeePortals plugin;
+    private BungeeWarpedBukkitPlugin plugin;
     private Map<String, Boolean> statusData = new HashMap<>();
     private PortalDataStore dataStore;
 
-    public EventListener(BungeePortals plugin, PortalDataStore dataStore) {
+    public EventListener(BungeeWarpedBukkitPlugin plugin, PortalDataStore dataStore) {
         this.plugin = plugin;
         this.dataStore = dataStore;
     }
