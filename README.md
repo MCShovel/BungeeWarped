@@ -1,9 +1,13 @@
-BungeePortals
-=============
+BungeeWarped
+============
 
-BungeePortals is a Bukkit plugin that communicates with BungeeCord; allowing you to create 'portals' of any material, shape and size in conjunction with WorldEdit. These portals will use BungeeCord to send you between your Minecraft servers.
+BungeeWarped is a BungeeCord/Spigot plugin that provides teleportation and warp features commonly found in the Bukkit.Essentials plugin, except for adding cross-server support.
 
-Bukkit: http://www.bukkit.org/
-BungeeCord: http://www.spigotmc.org/threads/bungeecord.392/
-WorldEdit: http://dev.bukkit.org/server-mods/worldedit/
-BungeePortals: http://www.spigotmc.org/resources/bungeeportals.19/
+A BungeeCord/Spigot plugin that provides setwarp, warp, sethome, home, tpa, tpahere, tpaccept, tpdeny, and point-to-point portals.  Using WorldEdit you can select cuboid regions to act as a teleport portal to another location and/or server.
+
+See the main Wiki page for help.
+
+https://github.com/MCShovel/BungeeWarped/wiki
+
+
+The code was orignally forked from https://github.com/MCShovel/BungeePortals
