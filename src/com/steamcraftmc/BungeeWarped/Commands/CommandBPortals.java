@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
-import com.steamcraftmc.BungeeWarped.Storage.PortalDataStore;
+import com.steamcraftmc.BungeeWarped.Storage.MySqlDataStore;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -24,9 +24,9 @@ public class CommandBPortals implements CommandExecutor {
 
     private BungeeWarpedBukkitPlugin plugin;
     private Map<String, List<String>> selections = new HashMap<>();
-    private PortalDataStore dataStore;
+    private MySqlDataStore dataStore;
 
-    public CommandBPortals(BungeeWarpedBukkitPlugin plugin, PortalDataStore dataStore) {
+    public CommandBPortals(BungeeWarpedBukkitPlugin plugin, MySqlDataStore dataStore) {
         this.plugin = plugin;
         this.dataStore = dataStore;
     }

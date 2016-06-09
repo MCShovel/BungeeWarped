@@ -18,11 +18,11 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
 
-public class PortalDataStore {
+public class MySqlDataStore {
     private BungeeWarpedBukkitPlugin plugin;
     private MySQLCore database;
 
-	public PortalDataStore(BungeeWarpedBukkitPlugin plugin) {
+	public MySqlDataStore(BungeeWarpedBukkitPlugin plugin) {
         this.plugin = plugin;
 	}
 	

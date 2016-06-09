@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
-import com.steamcraftmc.BungeeWarped.Storage.PortalDataStore;
+import com.steamcraftmc.BungeeWarped.Storage.MySqlDataStore;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -20,9 +20,9 @@ public class EventListener implements Listener {
 
     private BungeeWarpedBukkitPlugin plugin;
     private Map<String, Boolean> statusData = new HashMap<>();
-    private PortalDataStore dataStore;
+    private MySqlDataStore dataStore;
 
-    public EventListener(BungeeWarpedBukkitPlugin plugin, PortalDataStore dataStore) {
+    public EventListener(BungeeWarpedBukkitPlugin plugin, MySqlDataStore dataStore) {
         this.plugin = plugin;
         this.dataStore = dataStore;
     }

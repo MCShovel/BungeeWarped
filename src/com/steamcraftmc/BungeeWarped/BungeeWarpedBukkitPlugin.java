@@ -14,7 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.steamcraftmc.BungeeWarped.Storage.PortalDataStore;
+import com.steamcraftmc.BungeeWarped.Storage.MySqlDataStore;
 import com.steamcraftmc.BungeeWarped.Commands.CommandBPortals;
 import com.steamcraftmc.BungeeWarped.Listeners.EventListener;
 
@@ -24,7 +24,7 @@ public class BungeeWarpedBukkitPlugin extends JavaPlugin {
 
     private final Logger logger = Bukkit.getLogger();
     public Map<String, String> portalData = new HashMap<>();
-    public PortalDataStore dataStore;
+    public MySqlDataStore dataStore;
     public WorldEditPlugin worldEdit;
     public YamlConfiguration configFile;
 
@@ -38,7 +38,7 @@ public class BungeeWarpedBukkitPlugin extends JavaPlugin {
 
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         logger.log(Level.INFO, "[BungeeWarped] Plugin channel registered!");
-        dataStore = new PortalDataStore(this);
+        dataStore = new MySqlDataStore(this);
         loadConfigFiles();
         loadPortalsData();
         getCommand("bw").setExecutor(new CommandBPortals(this, dataStore));
