@@ -1,0 +1,31 @@
+  - sethome
+  - delhome
+  - home
+  - home.others
+  - suicide
+
+  - getpos
+  - afk
+  - help
+  - info
+  - time
+  - kit
+  - near
+  - seen
+
+  - mail
+  - mail.send
+
+  - pay
+  - give
+  - sell
+  - balance
+  - balance.others
+  - balancetop
+
+  - tpa
+  - tpaccept
+  - tpahere
+  - tpdeny
+  - warp
+  - warp.list
