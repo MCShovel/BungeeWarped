@@ -53,6 +53,9 @@ public class BungeeWarpedBukkitPlugin extends JavaPlugin implements PluginMessag
         new com.steamcraftmc.BungeeWarped.Commands.CmdWarp(this);
         new com.steamcraftmc.BungeeWarped.Commands.CmdSetWarp(this);
         new com.steamcraftmc.BungeeWarped.Commands.CmdDelWarp(this);
+
+        new com.steamcraftmc.BungeeWarped.Commands.CmdHome(this);
+        new com.steamcraftmc.BungeeWarped.Commands.CmdSetHome(this);
         
         logger.log(Level.INFO, "[BungeeWarped] Commands registered!");
         getServer().getPluginManager().registerEvents(new EventListener(this, dataStore), this);

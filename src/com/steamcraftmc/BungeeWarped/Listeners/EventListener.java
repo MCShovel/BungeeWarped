@@ -59,4 +59,12 @@ public class EventListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void onPlayerMove(org.bukkit.event.player.PlayerPortalEvent event) {
+		Player player = event.getPlayer();
+		if (!player.hasPermission("bungeewarped.vanillaportal.use")) {
+			event.setCancelled(true);
+		}
+    }
+
 }

@@ -107,6 +107,7 @@ public class MySqlDataStore {
 				finally {
 					result.close();
 				}
+				player.setBedSpawnLocation(loc, true);
 	    	    player.teleport(loc, TeleportCause.PLUGIN);
 
 	    	    this.database.execute(
@@ -128,7 +129,8 @@ public class MySqlDataStore {
         	player.sendMessage(ChatColor.RED + "The destination does not exist.");
         	return;
         }
-        else if(!player.hasPermission("bungeewarped.portal.*") && !player.hasPermission("bungeewarped.portal." + dest.name.toLowerCase())) {
+        else if(!player.hasPermission("bungeewarped.portal.use") || (
+        !player.hasPermission("bungeewarped.warp.location.*") && !player.hasPermission("bungeewarped.warp.location." + dest.name.toLowerCase()))) {
     	    player.sendMessage(plugin.configFile.getString("NoPortalPermissionMessage").replace("{destination}", dest.name).replaceAll("(&([a-f0-9l-or]))", "\u00A7$2"));
             return;
         }
@@ -138,6 +140,7 @@ public class MySqlDataStore {
     		Location loc = new Location(localtp, dest.X, dest.Y, dest.Z);
     	    loc.setPitch(dest.pitch);
     	    loc.setYaw(dest.yaw);
+			player.setBedSpawnLocation(loc, true);
     	    player.teleport(loc, TeleportCause.PLUGIN);
     	    return;
     	}

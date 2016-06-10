@@ -274,3 +274,7 @@ permissions:
     bungeewarped.tp.toggle:
         description: 'Access to use /tptoggle command.'
         default: false
+
+    bungeewarped.vanillaportal.use:
+        description: 'Allows users to teleport with vanilla portals'
+        default: false
