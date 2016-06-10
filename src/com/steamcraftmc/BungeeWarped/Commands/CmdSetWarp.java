@@ -18,21 +18,24 @@ public class CmdSetWarp extends BaseCommand {
 
 	@Override
 	protected boolean doCommand(Player player, PlayerState state, Command cmd, String[] args) {
+		if (plugin.bungeeServerName == null) {
+            sender.sendMessage(ChatColor.RED + "BungeeCord server name was not found.");
+			return true;
+		}
+
+		createDestination(player, destName);
 		return false;
 	}
 
-	private void createDestination(CommandSender sender, String[] args) {
+	private void createDestination(Player player, String destName) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "Only players can use that command.");
+            player.sendMessage(ChatColor.RED + "Only players can use that command.");
             return;
         }
-        Player player = (Player)sender;
         Location loc = player.getLocation();
         World world = player.getWorld();
-    	String serverName = world.getName();
-	    serverName = plugin.configFile.getString("servers." + serverName + ".name", serverName);
-    	
-    	String destName = args[2];
+	    String serverName = plugin.bungeeServerName;
+
     	plugin.dataStore.addDestination(
     		destName,
     		serverName,
@@ -43,6 +46,6 @@ public class CmdSetWarp extends BaseCommand {
     		loc.getPitch(),
     		loc.getYaw()
 		);	
-        sender.sendMessage(ChatColor.GOLD + "Warp '" + destName + "' created.");
+        player.sendMessage(ChatColor.GOLD + "Warp '" + destName + "' created.");
 	}
 }
