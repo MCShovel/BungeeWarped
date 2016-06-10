@@ -1,6 +1,5 @@
 package com.steamcraftmc.BungeeWarped.Commands;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -35,31 +34,10 @@ public class CmdWarp extends BaseCommand {
 
 	private void doWarp(Player player, String name) {
 
-		NamedDestination dest = plugin.dataStore.getDestination(name);
-        if (dest == null) {
-        	List<NamedDestination> possible = new ArrayList<NamedDestination>();
-    		List<NamedDestination> all = plugin.dataStore.getDestinations();
-    		for(Iterator<NamedDestination> i = all.iterator(); i.hasNext(); ) {
-    			NamedDestination test = i.next();
-    			if (test.name.toLowerCase().startsWith(name)) {
-    				possible.add(test);
-    			}
-    		}
-    		if (possible.size() == 1) {
-    			dest = possible.get(0);
-    		}
-    		else {
-    			player.sendMessage(ChatColor.RED + "The warp '" + name + "' does not exist.");
-    			return;
-    		}
-        }
-
-        if (!player.hasPermission("bungeewarped.warp.location.*") && !player.hasPermission("bungeewarped.warp.location." + dest.name.toLowerCase())) {
-        	player.sendMessage(ChatColor.RED + "The warp '" + name + "' does not exist.");
-            return;
-        }
-
-		plugin.dataStore.handlePlayerTeleportTo(player, dest);
+		NamedDestination dest = plugin.dataStore.findDestinationForPlayer(player, name);
+		if (dest != null) {
+			plugin.dataStore.handlePlayerTeleportTo(player, dest);
+		}
 	}
 
 	private void doListWarps(Player player) {

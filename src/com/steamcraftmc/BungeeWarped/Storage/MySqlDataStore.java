@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -14,7 +15,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
@@ -247,6 +247,33 @@ public class MySqlDataStore {
     			);
 	}
 
+	public NamedDestination findDestinationForPlayer(Player player, String name) {
+		NamedDestination dest = findDestination(name);
+        if (dest == null || (!player.hasPermission("bungeewarped.warp.location.*") && !player.hasPermission("bungeewarped.warp.location." + dest.name.toLowerCase()))) {
+        	player.sendMessage(ChatColor.RED + "That location does not exist.");
+            return null;
+        }
+        return dest;
+	}
+	
+	public NamedDestination findDestination(String name) {
+		NamedDestination dest = getDestination(name);
+        if (dest == null) {
+        	List<NamedDestination> possible = new ArrayList<NamedDestination>();
+    		List<NamedDestination> all = plugin.dataStore.getDestinations();
+    		for(Iterator<NamedDestination> i = all.iterator(); i.hasNext(); ) {
+    			NamedDestination test = i.next();
+    			if (test.name.toLowerCase().startsWith(name)) {
+    				possible.add(test);
+    			}
+    		}
+    		if (possible.size() == 1) {
+    			dest = possible.get(0);
+    		}
+        }
+        return dest;
+	}
+	
 	public NamedDestination getDestination(String destName) {
 
 		NamedDestination dest = new NamedDestination();
@@ -308,6 +335,12 @@ public class MySqlDataStore {
 		}
 	    
 	    return all;
+	}
+
+	public void deleteDestination(Player player, String name) {
+		this.database.execute(
+	    		"DELETE FROM `bportal_destinations` \n" +
+	    		"WHERE `bp_name` = '" + name + "';");
 	}
 
 }

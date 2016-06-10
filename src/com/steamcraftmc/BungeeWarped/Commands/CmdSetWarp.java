@@ -4,7 +4,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
@@ -13,25 +12,25 @@ import com.steamcraftmc.BungeeWarped.Storage.PlayerState;
 public class CmdSetWarp extends BaseCommand {
 
 	public CmdSetWarp(BungeeWarpedBukkitPlugin plugin) {
-		super(plugin, "bungeewarped.portal.cmd", "portal", 0, 1);
+		super(plugin, "bungeewarped.warp.create", "setwarp", 1, 1);
 	}
 
 	@Override
 	protected boolean doCommand(Player player, PlayerState state, Command cmd, String[] args) {
 		if (plugin.bungeeServerName == null) {
-            sender.sendMessage(ChatColor.RED + "BungeeCord server name was not found.");
+            player.sendMessage(ChatColor.RED + "BungeeCord server name was not found.");
 			return true;
 		}
 
-		createDestination(player, destName);
+		if (args.length == 1) {
+			createDestination(player, args[0]);
+			return true;
+		}
+
 		return false;
 	}
 
 	private void createDestination(Player player, String destName) {
-        if (!(sender instanceof Player)) {
-            player.sendMessage(ChatColor.RED + "Only players can use that command.");
-            return;
-        }
         Location loc = player.getLocation();
         World world = player.getWorld();
 	    String serverName = plugin.bungeeServerName;
