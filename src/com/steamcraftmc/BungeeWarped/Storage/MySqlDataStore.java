@@ -2,10 +2,11 @@ package com.steamcraftmc.BungeeWarped.Storage;
 
 import java.io.ByteArrayOutputStream;		
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -17,6 +18,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
+import com.steamcraftmc.BungeeWarped.Storage.NamedDestination;
 
 public class MySqlDataStore {
     private BungeeWarpedBukkitPlugin plugin;
@@ -82,12 +84,11 @@ public class MySqlDataStore {
     	this.plugin.log(Level.INFO, "Database ready...");
 	}
 
-    public void handlePlayerJoin(PlayerJoinEvent e) {
-	
-	    Player player = e.getPlayer();
+    public void handlePlayerJoin(Player player) {
+
     	String uuid = player.getUniqueId().toString();
 	    String serverName = player.getWorld().getName();
-	    serverName = plugin.configFile.getString("servers." + serverName + ".name", serverName);
+	    serverName = plugin.bungeeServerName;
 
 	    ResultSet result = this.database.select(
 	    		"SELECT `bp_worldName`, `bp_posX`, `bp_posY`, `bp_posZ`, `bp_pitch`, `bp_yaw` FROM `bportal_teleports` \n" +
@@ -118,13 +119,16 @@ public class MySqlDataStore {
     }
     
     public void handlePlayerTeleport(Player player, String destName) {
+    	handlePlayerTeleportTo(player, this.getDestination(destName));
+    }
 
-    	NamedDestination dest = this.getDestination(destName);
-    	
-        if (dest.name == null || !dest.name.equalsIgnoreCase(destName)) {
-        	player.sendMessage(ChatColor.RED + "The destination '" + destName + "' does not exist.");
+	public void handlePlayerTeleportTo(Player player, NamedDestination dest) {
+	
+        if (dest == null || dest.name == null) {
+        	player.sendMessage(ChatColor.RED + "The destination does not exist.");
+        	return;
         }
-        else if(!player.hasPermission("bungeewarped.portal.*") && !player.hasPermission("bungeewarped.portal." + dest.name)) {
+        else if(!player.hasPermission("bungeewarped.portal.*") && !player.hasPermission("bungeewarped.portal." + dest.name.toLowerCase())) {
     	    player.sendMessage(plugin.configFile.getString("NoPortalPermissionMessage").replace("{destination}", dest.name).replaceAll("(&([a-f0-9l-or]))", "\u00A7$2"));
             return;
         }
@@ -271,6 +275,39 @@ public class MySqlDataStore {
         	plugin.log(Level.SEVERE, "SQLException! " + e1.getMessage());
 		}
 	    
-	    return dest;
+	    return dest.name != null ? dest : null;
 	}
+
+	public List<NamedDestination> getDestinations() {
+		List<NamedDestination> all = new ArrayList<NamedDestination>();
+	    try {
+		    ResultSet result = this.database.select(
+		    		"SELECT `bp_name`, `bp_serverName`, `bp_worldName`, `bp_posX`, `bp_posY`, `bp_posZ`, `bp_pitch`, `bp_yaw` FROM `bportal_destinations`;");
+
+			try {
+				while (result.next()) {
+					int ix = 0;
+					NamedDestination dest = new NamedDestination();
+					dest.name = result.getString(++ix);
+					dest.serverName = result.getString(++ix);
+					dest.worldName = result.getString(++ix);
+					dest.X = result.getDouble(++ix);
+					dest.Y = result.getDouble(++ix);
+					dest.Z = result.getDouble(++ix);
+					dest.pitch = (float)result.getDouble(++ix);
+					dest.yaw = (float)result.getDouble(++ix);
+					all.add(dest);
+				}
+			}
+			finally {
+				result.close();
+			}
+			
+		} catch (SQLException e1) {
+        	plugin.log(Level.SEVERE, "SQLException! " + e1.getMessage());
+		}
+	    
+	    return all;
+	}
+
 }

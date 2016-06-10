@@ -23,6 +23,8 @@ public abstract class BaseCommand implements CommandExecutor {
         this.cmdName = command;
         this.minArgs = minArg;
         this.maxArgs = maxArg;
+
+        this.plugin.getCommand(this.cmdName).setExecutor(this);
     }
     
     protected abstract boolean doCommand(Player player, PlayerState state, Command cmd, String[] args);

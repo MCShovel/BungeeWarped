@@ -14,22 +14,25 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.PluginMessageListener;
 
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import com.steamcraftmc.BungeeWarped.Storage.MySqlDataStore;
 import com.steamcraftmc.BungeeWarped.Storage.PlayerState;
-import com.steamcraftmc.BungeeWarped.Commands.CmdPortal;
-import com.steamcraftmc.BungeeWarped.Commands.CommandBPortals;
 import com.steamcraftmc.BungeeWarped.Listeners.EventListener;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
-public class BungeeWarpedBukkitPlugin extends JavaPlugin {
+public class BungeeWarpedBukkitPlugin extends JavaPlugin implements PluginMessageListener {
 
     private final Logger logger = Bukkit.getLogger();
     public Map<String, String> portalData = new HashMap<>();
     public MySqlDataStore dataStore;
     public WorldEditPlugin worldEdit;
     public YamlConfiguration configFile;
+    public String bungeeServerName;
 
     public void onEnable() {
         long time = System.currentTimeMillis();
@@ -40,12 +43,15 @@ public class BungeeWarpedBukkitPlugin extends JavaPlugin {
         }
 
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this);
         logger.log(Level.INFO, "[BungeeWarped] Plugin channel registered!");
         dataStore = new MySqlDataStore(this);
         loadConfigFiles();
         loadPortalsData();
-        
-        getCommand("portal").setExecutor(new CmdPortal(this));
+
+        new com.steamcraftmc.BungeeWarped.Commands.CmdPortal(this);
+        new com.steamcraftmc.BungeeWarped.Commands.CmdWarp(this);
+        new com.steamcraftmc.BungeeWarped.Commands.CmdSetWarp(this);
         
         logger.log(Level.INFO, "[BungeeWarped] Commands registered!");
         getServer().getPluginManager().registerEvents(new EventListener(this, dataStore), this);
@@ -61,6 +67,46 @@ public class BungeeWarpedBukkitPlugin extends JavaPlugin {
         logger.log(severity, "[BungeeWarped] " + text);
     }
 
+    private class RequestServerName implements Runnable {
+    	private final BungeeWarpedBukkitPlugin plugin;
+    	private final Player player;
+    	public RequestServerName(BungeeWarpedBukkitPlugin plugin, Player player) {
+    		this.plugin = plugin;
+    		this.player = player;
+    	}
+		@Override
+		public void run() {
+			if (!player.isOnline()) return;
+			logger.info("[BungeeWarped] Sending message: GetServer");
+	        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+	        out.writeUTF("GetServer");
+	        player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
+		}
+    }
+    
+    
+    public void updateBungeeServerName(Player player) {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(this,
+				new BungeeWarpedBukkitPlugin.RequestServerName(this, player), 30L);
+    }
+    
+    @Override
+    public void onPluginMessageReceived(String channel, Player player, byte[] message) {
+		if (!channel.equals("BungeeCord")) {
+			return;
+		}
+		ByteArrayDataInput in = ByteStreams.newDataInput(message);
+		String subchannel = in.readUTF();
+		if (subchannel.equals("GetServer")) {
+			String name = in.readUTF();
+			if (name != null) {
+				this.bungeeServerName = name;
+				logger.info("[BungeeWarped] Received bungee server name: " + name);
+				this.dataStore.handlePlayerJoin(player);
+			}
+		}
+	}
+    
     private void createConfigFile(InputStream in, File file) {
         try {
             OutputStream out = new FileOutputStream(file);

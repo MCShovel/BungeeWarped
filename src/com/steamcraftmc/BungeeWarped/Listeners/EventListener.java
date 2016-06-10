@@ -29,7 +29,12 @@ public class EventListener implements Listener {
     
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerJoinEvent(PlayerJoinEvent e) {
-    	this.dataStore.handlePlayerJoin(e);
+    	if (this.plugin.bungeeServerName == null) {
+    		this.plugin.updateBungeeServerName(e.getPlayer());
+    	}
+    	else {
+    		this.plugin.dataStore.handlePlayerJoin(e.getPlayer());
+    	}
     }
 
     @EventHandler
