@@ -12,76 +12,76 @@ commands:
         description: 'Administration help and commands.'
         usage: 'Use /<command> for help using this command.'
         permission: bungeewarped.portal.cmd
-		permission-message: '§4You do not have permission to perform this action.'
+        permission-message: '§4You do not have permission to perform this action.'
     warp:
         aliases: [warps]
         description: 'Teleports you to a warp by name, or lists the warps available.'
         usage: 'Usage: /<command> [name]'
         permission: bungeewarped.warp.use
-		permission-message: '§4You do not have permission to perform this action.'
+        permission-message: '§4You do not have permission to perform this action.'
     setwarp:
         aliases: [createwarp]
         description: 'Creates or replaces a named warp at your current position.'
         usage: 'Usage: /<command> name'
         permission: bungeewarped.warp.create
-		permission-message: '§4You do not have permission to perform this action.'
+        permission-message: '§4You do not have permission to perform this action.'
     delwarp:
         aliases: [remwarp, rmwarp]
         description: 'Removes a named warp if it exists.'
         usage: 'Usage: /<command> name'
         permission: bungeewarped.warp.delete
-		permission-message: '§4You do not have permission to perform this action.'
+        permission-message: '§4You do not have permission to perform this action.'
     home:
         aliases: [homes]
         description: 'Teleport to your home.'
         usage: 'Usage: /<command> [name]'
         permission: bungeewarped.home.use
-		permission-message: '§4You do not have permission to perform this action.'
+        permission-message: '§4You do not have permission to perform this action.'
     sethome:
         aliases: [createhome]
         description: 'Set your home and world bedspawn to your current position.'
         usage: 'Usage: /<command> [name]'
         permission: bungeewarped.home.create
-		permission-message: '§4You do not have permission to perform this action.'
+        permission-message: '§4You do not have permission to perform this action.'
     delhome:
         aliases: [remhome, rmhome]
         description: 'Set your home and world bedspawn to your current position.'
         usage: 'Usage: /<command> [name]'
         permission: bungeewarped.home.delete
-		permission-message: '§4You do not have permission to perform this action.'
+        permission-message: '§4You do not have permission to perform this action.'
     tpo:
         description: 'Force teleport a player.'
         usage: 'Usage: /<command> [player]'
         permission: bungeewarped.op.tp
-		permission-message: '§4You do not have permission to perform this action.'
+        permission-message: '§4You do not have permission to perform this action.'
     tpa:
         aliases: [call, tpask]
         description: 'Request to teleport to another player.'
         usage: 'Usage: /<command> player'
         permission: bungeewarped.tp.there
-		permission-message: '§4You do not have permission to perform this action.'
+        permission-message: '§4You do not have permission to perform this action.'
     tpahere:
         description: 'Request another player to teleport to you.'
         usage: 'Usage: /<command> player'
         permission: bungeewarped.tp.here
-		permission-message: '§4You do not have permission to perform this action.'
+        permission-message: '§4You do not have permission to perform this action.'
     tpaccept:
         aliases: [tpyes]
         description: 'Accept the pending teleport request.'
         usage: 'Usage: /<command>'
         permission: bungeewarped.tp.accept
-		permission-message: '§4You do not have permission to perform this action.'
+        permission-message: '§4You do not have permission to perform this action.'
     tpdeny:
         aliases: [tpno]
         description: 'Deny the pending teleport request.'
         usage: 'Usage: /<command>'
         permission: bungeewarped.tp.deny
-		permission-message: '§4You do not have permission to perform this action.'
+        permission-message: '§4You do not have permission to perform this action.'
     tptoggle:
         description: 'Stop recieving teleport requests.'
         usage: 'Usage: /<command>'
         permission: bungeewarped.tp.toggle
-		permission-message: '§4You do not have permission to perform this action.'
+        permission-message: '§4You do not have permission to perform this action.'
 
 permissions:
     bungeewarped.*:

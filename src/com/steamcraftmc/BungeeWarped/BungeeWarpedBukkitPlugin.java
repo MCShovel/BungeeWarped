@@ -12,9 +12,12 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.steamcraftmc.BungeeWarped.Storage.MySqlDataStore;
+import com.steamcraftmc.BungeeWarped.Storage.PlayerState;
+import com.steamcraftmc.BungeeWarped.Commands.CmdPortal;
 import com.steamcraftmc.BungeeWarped.Commands.CommandBPortals;
 import com.steamcraftmc.BungeeWarped.Listeners.EventListener;
 
@@ -41,7 +44,9 @@ public class BungeeWarpedBukkitPlugin extends JavaPlugin {
         dataStore = new MySqlDataStore(this);
         loadConfigFiles();
         loadPortalsData();
-        getCommand("bw").setExecutor(new CommandBPortals(this, dataStore));
+        
+        getCommand("portal").setExecutor(new CmdPortal(this));
+        
         logger.log(Level.INFO, "[BungeeWarped] Commands registered!");
         getServer().getPluginManager().registerEvents(new EventListener(this, dataStore), this);
         logger.log(Level.INFO, "[BungeeWarped] Events registered!");
@@ -93,5 +98,9 @@ public class BungeeWarpedBukkitPlugin extends JavaPlugin {
             logger.severe("[BungeeWarped] Load Failed: " + e.toString());
         	this.portalData = new HashMap<>();
         }
+    }
+    
+    public PlayerState getPlayerState(Player player) {
+    	return new PlayerState();
     }
 }

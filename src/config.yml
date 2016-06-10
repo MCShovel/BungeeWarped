@@ -1,3 +1,7 @@
 # BungeePortals configuration file, visit www.spigotmc.org/resources/bungeeportals.19 for help.
-NoPortalPermissionMessage: '&cYou do not have permission to go to the server {destination}.'
+
+
+translation:
+  AccessDenied: '&4You do not have permission to perform this action.'
+  NoPortalPermissionMessage: '&cYou do not have permission to go to that location.'
 
