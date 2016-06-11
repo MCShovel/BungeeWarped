@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
-import com.steamcraftmc.BungeeWarped.Storage.PlayerState;
+import com.steamcraftmc.BungeeWarped.Controllers.PlayerController;
 import com.steamcraftmc.BungeeWarped.Utils.WorldEditUtil;
 
 public class CmdPortal extends BaseCommand {
@@ -22,7 +22,7 @@ public class CmdPortal extends BaseCommand {
 	}
 
 	@Override
-	protected boolean doCommand(Player player, PlayerState state, Command cmd, String[] args) {
+	protected boolean doCommand(Player player, PlayerController state, Command cmd, String[] args) {
 
         if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
         	this.doHelp(player);
@@ -65,8 +65,7 @@ public class CmdPortal extends BaseCommand {
 	}
 
     private void reloadConfig(CommandSender sender) {
-        plugin.loadConfigFiles();
-        plugin.loadPortalsData();
+        plugin.reload();
         sender.sendMessage(ChatColor.GREEN + "All configuration files and data have been reloaded.");
 	}
     

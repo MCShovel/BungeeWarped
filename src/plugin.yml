@@ -241,6 +241,26 @@ permissions:
     bungeewarped.home.delete:
         description: 'Access to use /delhome command.'
         default: false
+    bungeewarped.home.multi.1:
+        description: 'Assumed if you have access to bungeewarped.home.create.'
+    bungeewarped.home.multi.2:
+        description: 'Allows a user to have 2 named homes.'
+        children:
+            bungeewarped.home.multi.1: true
+    bungeewarped.home.multi.3:
+        description: 'Allows a user to have 3 named homes.'
+        children:
+            bungeewarped.home.multi.2: true
+    bungeewarped.home.multi.4:
+        description: 'Allows a user to have 4 named homes.'
+        children:
+            bungeewarped.home.multi.3: true
+    bungeewarped.home.multi.5:
+        description: 'Allows a user to have 5 named homes.'
+        children:
+            bungeewarped.home.multi.4: true
+    bungeewarped.home.multi.unlimited:
+        description: 'Allows a user to have unlimited named homes.'
 
 #Teleport player permissions
     bungeewarped.user.tp:
@@ -277,4 +297,4 @@ permissions:
 
     bungeewarped.vanillaportal.use:
         description: 'Allows users to teleport with vanilla portals'
-        default: false
+        default: true

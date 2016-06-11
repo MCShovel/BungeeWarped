@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 
 import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
 import com.steamcraftmc.BungeeWarped.Storage.NamedDestination;
-import com.steamcraftmc.BungeeWarped.Storage.PlayerState;
+import com.steamcraftmc.BungeeWarped.Controllers.PlayerController;
 
 public class CmdDelWarp extends BaseCommand {
 
@@ -15,7 +15,7 @@ public class CmdDelWarp extends BaseCommand {
 	}
 
 	@Override
-	protected boolean doCommand(Player player, PlayerState state, Command cmd, String[] args) {
+	protected boolean doCommand(Player player, PlayerController state, Command cmd, String[] args) {
 
 		if (args.length == 1) {
 			deleteWarp(player, args[0].toLowerCase());

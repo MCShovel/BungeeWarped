@@ -9,7 +9,8 @@ import org.bukkit.entity.Player;
 
 import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
 import com.steamcraftmc.BungeeWarped.Storage.NamedDestination;
-import com.steamcraftmc.BungeeWarped.Storage.PlayerState;
+import com.steamcraftmc.BungeeWarped.Storage.TeleportReason;
+import com.steamcraftmc.BungeeWarped.Controllers.PlayerController;
 
 public class CmdWarp extends BaseCommand {
 
@@ -18,7 +19,7 @@ public class CmdWarp extends BaseCommand {
 	}
 
 	@Override
-	protected boolean doCommand(Player player, PlayerState state, Command cmd, String[] args) {
+	protected boolean doCommand(Player player, PlayerController state, Command cmd, String[] args) {
 
 		if (args.length == 0) {
 			doListWarps(player);
@@ -36,7 +37,8 @@ public class CmdWarp extends BaseCommand {
 
 		NamedDestination dest = plugin.dataStore.findDestinationForPlayer(player, name);
 		if (dest != null) {
-			plugin.dataStore.handlePlayerTeleportTo(player, dest);
+			dest.reason = TeleportReason.WARP;
+			plugin.getPlayerController(player).teleportToDestination(dest);
 		}
 	}
 

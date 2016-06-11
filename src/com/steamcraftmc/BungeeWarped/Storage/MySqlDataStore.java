@@ -1,7 +1,5 @@
 package com.steamcraftmc.BungeeWarped.Storage;
 
-import java.io.ByteArrayOutputStream;		
-import java.io.DataOutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,20 +10,18 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-
 import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
 import com.steamcraftmc.BungeeWarped.Storage.NamedDestination;
 
 public class MySqlDataStore {
     private BungeeWarpedBukkitPlugin plugin;
     private MySQLCore database;
+    private String tablePrefix;
 
 	public MySqlDataStore(BungeeWarpedBukkitPlugin plugin) {
         this.plugin = plugin;
+        this.tablePrefix = "bwarped_";
 	}
 	
 	public void initialize() {
@@ -33,122 +29,115 @@ public class MySqlDataStore {
 			database.close();
 		}
 		
-        this.plugin.log(Level.INFO, "Initializing Database Connection...");
+        this.plugin.log(Level.INFO, "Initializing Database...");
         this.database = new MySQLCore(plugin, 
-    		plugin.configFile.getString("mysql.host", "localhost"),
-    		plugin.configFile.getString("mysql.database", "bportals"), 
-    		plugin.configFile.getInt("mysql.port", 3306),
-    		plugin.configFile.getString("mysql.username", "root"),
-    		plugin.configFile.getString("mysql.password", "password")
+    		plugin.config.mysqlHost(),
+    		plugin.config.mysqlDatabase(), 
+    		plugin.config.mysqlPort(),
+    		plugin.config.mysqlUsername(),
+    		plugin.config.mysqlPassword()
 		);
+        this.tablePrefix = plugin.config.mysqlTablePrefix();
 
-        if (!this.database.existsTable("bportal_teleports")) {
-        	this.plugin.log(Level.INFO, "Creating bportal_teleports Schema...");
-        	this.database.execute(
-    		"CREATE TABLE `bportal_teleports` ( \n" +
-            "  `bp_playerUUID` VARCHAR(40) NOT NULL, \n" +
-            "  `bp_serverName` VARCHAR(45) NOT NULL, \n" +
-            "  `bp_worldName` VARCHAR(45) NOT NULL, \n" +
-            "  `bp_posX` DOUBLE NOT NULL, \n" +
-            "  `bp_posY` DOUBLE NOT NULL, \n" +
-            "  `bp_posZ` DOUBLE NOT NULL, \n" +
-            "  `bp_pitch` DOUBLE NOT NULL, \n" +
-            "  `bp_yaw` DOUBLE NOT NULL, \n" +
-            "  PRIMARY KEY (`bp_playerUUID`, `bp_serverName`)); \n" +
+        this.database.execute(
+    		"CREATE TABLE IF NOT EXISTS `" + tablePrefix + "teleports` ( \n" +
+            "  `bw_playerUUID` VARCHAR(40) NOT NULL, \n" +
+            "  `bw_serverName` VARCHAR(45) NOT NULL, \n" +
+            "  `bw_worldName` VARCHAR(45) NOT NULL, \n" +
+            "  `bw_posX` DOUBLE NOT NULL, \n" +
+            "  `bw_posY` DOUBLE NOT NULL, \n" +
+            "  `bw_posZ` DOUBLE NOT NULL, \n" +
+            "  `bw_pitch` DOUBLE NOT NULL, \n" +
+            "  `bw_yaw` DOUBLE NOT NULL, \n" +
+            "  `bw_reason` VARCHAR(45) NOT NULL, \n" +
+            "  PRIMARY KEY (`bw_playerUUID`, `bw_serverName`)); \n" +
 			"");
-    	}
-        if (!this.database.existsTable("bportal_destinations")) {
-        	this.plugin.log(Level.WARNING, "Creating bportal_destinations Schema...");
-        	this.database.execute(
-    		"CREATE TABLE `bportal_destinations` ( \n" +
-            "  `bp_name` VARCHAR(40) NOT NULL, \n" +
-            "  `bp_serverName` VARCHAR(45) NOT NULL, \n" +
-            "  `bp_worldName` VARCHAR(45) NOT NULL, \n" +
-            "  `bp_posX` DOUBLE NOT NULL, \n" +
-            "  `bp_posY` DOUBLE NOT NULL, \n" +
-            "  `bp_posZ` DOUBLE NOT NULL, \n" +
-            "  `bp_pitch` DOUBLE NOT NULL, \n" +
-            "  `bp_yaw` DOUBLE NOT NULL, \n" +
-            "  PRIMARY KEY (`bp_name`)); \n" +
+
+        this.database.execute(
+    		"CREATE TABLE IF NOT EXISTS `" + tablePrefix + "destinations` ( \n" +
+            "  `bw_name` VARCHAR(40) NOT NULL, \n" +
+            "  `bw_serverName` VARCHAR(45) NOT NULL, \n" +
+            "  `bw_worldName` VARCHAR(45) NOT NULL, \n" +
+            "  `bw_posX` DOUBLE NOT NULL, \n" +
+            "  `bw_posY` DOUBLE NOT NULL, \n" +
+            "  `bw_posZ` DOUBLE NOT NULL, \n" +
+            "  `bw_pitch` DOUBLE NOT NULL, \n" +
+            "  `bw_yaw` DOUBLE NOT NULL, \n" +
+            "  PRIMARY KEY (`bw_name`)); \n" +
 			"");
-    	}
-        if (!this.database.existsTable("bportal_portals")) {
-        	this.plugin.log(Level.WARNING, "Creating bportal_portals Schema...");
-        	this.database.execute(
-    		"CREATE TABLE `bportal_portals` ( \n" +
-            "  `bp_block` VARCHAR(64) NOT NULL, \n" +
-            "  `bp_destination` VARCHAR(40) NOT NULL, \n" +
-            "  PRIMARY KEY (`bp_block`)); \n" +
+
+        this.database.execute(
+    		"CREATE TABLE IF NOT EXISTS `" + tablePrefix + "portals` ( \n" +
+            "  `bw_block` VARCHAR(64) NOT NULL, \n" +
+            "  `bw_destination` VARCHAR(40) NOT NULL, \n" +
+            "  PRIMARY KEY (`bw_block`)); \n" +
 			"");
-    	}
+
+        this.database.execute(
+    		"CREATE TABLE IF NOT EXISTS `" + tablePrefix + "homes` ( \n" +
+            "  `bw_playerUUID` VARCHAR(40) NOT NULL, \n" +
+            "  `bw_playerName` VARCHAR(64) NOT NULL, \n" +
+            "  `bw_name` VARCHAR(40) NOT NULL, \n" +
+            "  `bw_serverName` VARCHAR(45) NOT NULL, \n" +
+            "  `bw_worldName` VARCHAR(45) NOT NULL, \n" +
+            "  `bw_posX` DOUBLE NOT NULL, \n" +
+            "  `bw_posY` DOUBLE NOT NULL, \n" +
+            "  `bw_posZ` DOUBLE NOT NULL, \n" +
+            "  `bw_pitch` DOUBLE NOT NULL, \n" +
+            "  `bw_yaw` DOUBLE NOT NULL, \n" +
+            "  PRIMARY KEY (`bw_playerUUID`, `bw_name`)); \n" +
+			"");
+
     	this.plugin.log(Level.INFO, "Database ready...");
 	}
 
-    public void handlePlayerJoin(Player player) {
+    public NamedDestination getPlayerJoinLocation(String uuid) {
 
-    	String uuid = player.getUniqueId().toString();
-	    String serverName = player.getWorld().getName();
-	    serverName = plugin.bungeeServerName;
+	    String serverName = plugin.bungeeServerName;
 
-	    ResultSet result = this.database.select(
-	    		"SELECT `bp_worldName`, `bp_posX`, `bp_posY`, `bp_posZ`, `bp_pitch`, `bp_yaw` FROM `bportal_teleports` \n" +
-	    		"WHERE `bp_playerUUID` = '" + uuid + "' AND `bp_serverName` = '" + serverName + "';");
-	    
 	    try {
+		    ResultSet result = this.database.select(
+		    		"SELECT `bw_worldName`, `bw_posX`, `bw_posY`, `bw_posZ`, `bw_pitch`, `bw_yaw`, `bw_reason` FROM `" + tablePrefix + "teleports` \n" +
+		    		"WHERE `bw_playerUUID` = '" + uuid + "' AND `bw_serverName` = '" + serverName + "';");
+	    
 			if (result.first()) {
-				Location loc;
+				NamedDestination loc;
 				try {
 					int ix = 0;
-		    	    World world = player.getServer().getWorld(result.getString(++ix));
-		    	    loc = new Location(world, result.getDouble(++ix), result.getDouble(++ix), result.getDouble(++ix));
-		    	    loc.setPitch((float)result.getDouble(++ix));
-		    	    loc.setYaw((float)result.getDouble(++ix));
+					loc = new NamedDestination();
+					loc.serverName = plugin.getServerName(); 
+					loc.worldName = result.getString(++ix);
+					loc.X = result.getDouble(++ix);
+					loc.Y = result.getDouble(++ix);
+					loc.Z = result.getDouble(++ix);
+		    	    loc.pitch = (float)result.getDouble(++ix);
+		    	    loc.yaw = (float)result.getDouble(++ix);
+		    	    loc.reason = Enum.valueOf(TeleportReason.class, result.getString(++ix));
 				}
 				finally {
 					result.close();
 				}
-				player.setBedSpawnLocation(loc, true);
-	    	    player.teleport(loc, TeleportCause.PLUGIN);
 
-	    	    this.database.execute(
-			    		"DELETE FROM `bportal_teleports` \n" +
-			    		"WHERE `bp_playerUUID` = '" + uuid + "' AND `bp_serverName` = '" + serverName + "';");
+				return loc;
 			}
 		} catch (SQLException e1) {
         	plugin.log(Level.SEVERE, "SQLException! " + e1.getMessage());
 		}
+	    return null;
     }
     
-    public void handlePlayerTeleport(Player player, String destName) {
-    	handlePlayerTeleportTo(player, this.getDestination(destName));
+    public void removePlayerJoinLocation(String uuid) {
+	    String serverName = plugin.bungeeServerName;
+	    
+		this.database.execute(
+	    		"DELETE FROM `" + tablePrefix + "teleports` \n" +
+	    		"WHERE `bw_playerUUID` = '" + uuid + "' AND `bw_serverName` = '" + serverName + "';");
     }
-
-	public void handlePlayerTeleportTo(Player player, NamedDestination dest) {
-	
-        if (dest == null || dest.name == null) {
-        	player.sendMessage(ChatColor.RED + "The destination does not exist.");
-        	return;
-        }
-        else if(!player.hasPermission("bungeewarped.portal.use") || (
-        !player.hasPermission("bungeewarped.warp.location.*") && !player.hasPermission("bungeewarped.warp.location." + dest.name.toLowerCase()))) {
-    	    player.sendMessage(plugin.configFile.getString("NoPortalPermissionMessage").replace("{destination}", dest.name).replaceAll("(&([a-f0-9l-or]))", "\u00A7$2"));
-            return;
-        }
-        
-    	World localtp = player.getServer().getWorld(dest.worldName);
-    	if (localtp != null) {
-    		Location loc = new Location(localtp, dest.X, dest.Y, dest.Z);
-    	    loc.setPitch(dest.pitch);
-    	    loc.setYaw(dest.yaw);
-			player.setBedSpawnLocation(loc, true);
-    	    player.teleport(loc, TeleportCause.PLUGIN);
-    	    return;
-    	}
-    	
-    	String uuid = player.getUniqueId().toString();
+    
+	public void saveTeleportDestination(String uuid, NamedDestination dest) {
     	this.database.execute(
-			"INSERT INTO `bportal_teleports` \n" +
-    			"(`bp_playerUUID`, `bp_serverName`, `bp_worldName`, `bp_posX`, `bp_posY`, `bp_posZ`, `bp_pitch`, `bp_yaw`) \n" +
+			"INSERT INTO `" + tablePrefix + "teleports` \n" +
+    			"(`bw_playerUUID`, `bw_serverName`, `bw_worldName`, `bw_posX`, `bw_posY`, `bw_posZ`, `bw_pitch`, `bw_yaw`, `bw_reason`) \n" +
     			"VALUES ( \n" +
     			"'" + uuid + "', \n" +
     			"'" + dest.serverName + "', \n" +
@@ -157,47 +146,36 @@ public class MySqlDataStore {
     			dest.Y + ", \n" +
     			dest.Z + ", \n" +
     			dest.pitch + ", \n" +
-    			dest.yaw + " ) \n" +
+    			dest.yaw + ", \n" +
+    			"'" + dest.reason.toString() + "' ) \n" +
     			"ON DUPLICATE KEY UPDATE \n" +
-    			"bp_worldName = '" + dest.worldName + "', \n" +
-    			"bp_posX = " + dest.X + ", \n" +
-    			"bp_posY = " + dest.Y + ", \n" +
-    			"bp_posZ = " + dest.Z + ", \n" +
-    			"bp_pitch = " + dest.pitch + ", \n" +
-    			"bp_yaw = " + dest.yaw + "; \n"
-    			);
-
-    	try {
-	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	        DataOutputStream dos = new DataOutputStream(baos);
-	        dos.writeUTF("Connect");
-			dos.writeUTF(dest.serverName);
-	        player.sendPluginMessage(plugin, "BungeeCord", baos.toByteArray());
-	        baos.close();
-	        dos.close();
-    	}
-    	catch (Exception e) {
-        	plugin.log(Level.SEVERE, "Exception! " + e.toString());
-    	}
+    			"bw_worldName = '" + dest.worldName + "', \n" +
+    			"bw_posX = " + dest.X + ", \n" +
+    			"bw_posY = " + dest.Y + ", \n" +
+    			"bw_posZ = " + dest.Z + ", \n" +
+    			"bw_pitch = " + dest.pitch + ", \n" +
+    			"bw_yaw = " + dest.yaw + ", \n" +
+    			"bw_reason = '" + dest.reason.toString() + "'; \n"
+			);
     }
 
 	public void addPortalBlock(String block, String destName) {
     	this.database.execute(
-			"INSERT INTO `bportal_portals` \n" +
-    			"(`bp_block`, `bp_destination`) \n" +
+			"INSERT INTO `" + tablePrefix + "portals` \n" +
+    			"(`bw_block`, `bw_destination`) \n" +
     			"VALUES ( \n" +
     			"'" + block + "', \n" +
     			"'" + destName + "' ) \n" +
     			"ON DUPLICATE KEY UPDATE \n" +
-    			"bp_block = '" + block + "', \n" +
-    			"bp_destination = '" + destName + "'; \n"
+    			"bw_block = '" + block + "', \n" +
+    			"bw_destination = '" + destName + "'; \n"
     			);
 	}
 
 	public void removePortalBlock(String block) {
 	    this.database.execute(
-	    		"DELETE FROM `bportal_portals` \n" +
-	    		"WHERE `bp_block` = '" + block + "';");
+	    		"DELETE FROM `" + tablePrefix + "portals` \n" +
+	    		"WHERE `bw_block` = '" + block + "';");
 	}
 
 	public Map<String, String> getPortalBlocks() {
@@ -205,7 +183,7 @@ public class MySqlDataStore {
         
 	    try {
 		    ResultSet result = this.database.select(
-		    		"SELECT `bp_block`, `bp_destination` FROM `bportal_portals`;");
+		    		"SELECT `bw_block`, `bw_destination` FROM `" + tablePrefix + "portals`;");
 		    try {
 				while (result.next()) {
 					portalData.put(result.getString(1), result.getString(2));
@@ -228,8 +206,8 @@ public class MySqlDataStore {
 			double x, double y, double z, float pitch, float yaw) {
 
     	this.database.execute(
-			"INSERT INTO `bportal_destinations` \n" +
-    			"(`bp_name`, `bp_serverName`, `bp_worldName`, `bp_posX`, `bp_posY`, `bp_posZ`, `bp_pitch`, `bp_yaw`) \n" +
+			"INSERT INTO `" + tablePrefix + "destinations` \n" +
+    			"(`bw_name`, `bw_serverName`, `bw_worldName`, `bw_posX`, `bw_posY`, `bw_posZ`, `bw_pitch`, `bw_yaw`) \n" +
     			"VALUES ( \n" +
     			"'" + destName + "', \n" +
     			"'" + serverName + "', \n" +
@@ -240,13 +218,13 @@ public class MySqlDataStore {
     			pitch + ", \n" +
     			yaw + " ) \n" +
     			"ON DUPLICATE KEY UPDATE \n" +
-    			"bp_serverName = '" + serverName + "', \n" +
-    			"bp_worldName = '" + worldName + "', \n" +
-    			"bp_posX = " + x + ", \n" +
-    			"bp_posY = " + y + ", \n" +
-    			"bp_posZ = " + z + ", \n" +
-    			"bp_pitch = " + pitch + ", \n" +
-    			"bp_yaw = " + yaw + "; \n"
+    			"bw_serverName = '" + serverName + "', \n" +
+    			"bw_worldName = '" + worldName + "', \n" +
+    			"bw_posX = " + x + ", \n" +
+    			"bw_posY = " + y + ", \n" +
+    			"bw_posZ = " + z + ", \n" +
+    			"bw_pitch = " + pitch + ", \n" +
+    			"bw_yaw = " + yaw + "; \n"
     			);
 	}
 
@@ -282,8 +260,8 @@ public class MySqlDataStore {
 		NamedDestination dest = new NamedDestination();
 	    try {
 		    ResultSet result = this.database.select(
-		    		"SELECT `bp_name`, `bp_serverName`, `bp_worldName`, `bp_posX`, `bp_posY`, `bp_posZ`, `bp_pitch`, `bp_yaw` FROM `bportal_destinations` \n" +
-		    		"WHERE `bp_name` = '" + destName + "';");
+		    		"SELECT `bw_name`, `bw_serverName`, `bw_worldName`, `bw_posX`, `bw_posY`, `bw_posZ`, `bw_pitch`, `bw_yaw` FROM `" + tablePrefix + "destinations` \n" +
+		    		"WHERE `bw_name` = '" + destName + "';");
 		    
 			if (result.first()) {
 				try {
@@ -312,7 +290,7 @@ public class MySqlDataStore {
 		List<NamedDestination> all = new ArrayList<NamedDestination>();
 	    try {
 		    ResultSet result = this.database.select(
-		    		"SELECT `bp_name`, `bp_serverName`, `bp_worldName`, `bp_posX`, `bp_posY`, `bp_posZ`, `bp_pitch`, `bp_yaw` FROM `bportal_destinations`;");
+		    		"SELECT `bw_name`, `bw_serverName`, `bw_worldName`, `bw_posX`, `bw_posY`, `bw_posZ`, `bw_pitch`, `bw_yaw` FROM `" + tablePrefix + "destinations`;");
 
 			try {
 				while (result.next()) {
@@ -326,6 +304,7 @@ public class MySqlDataStore {
 					dest.Z = result.getDouble(++ix);
 					dest.pitch = (float)result.getDouble(++ix);
 					dest.yaw = (float)result.getDouble(++ix);
+					dest.reason = TeleportReason.WARP;
 					all.add(dest);
 				}
 			}
@@ -342,8 +321,95 @@ public class MySqlDataStore {
 
 	public void deleteDestination(Player player, String name) {
 		this.database.execute(
-	    		"DELETE FROM `bportal_destinations` \n" +
-	    		"WHERE `bp_name` = '" + name + "';");
+	    		"DELETE FROM `" + tablePrefix + "destinations` \n" +
+	    		"WHERE `bw_name` = '" + name + "';");
+	}
+
+	public List<NamedDestination> getPlayerHomes(String playerUuid) {
+		List<NamedDestination> all = new ArrayList<NamedDestination>();
+	    try {
+		    ResultSet result = this.database.select(
+		    		"SELECT `bw_name`, `bw_serverName`, `bw_worldName`, `bw_posX`, `bw_posY`, `bw_posZ`, `bw_pitch`, `bw_yaw` FROM `" + tablePrefix + "homes`;");
+
+			try {
+				while (result.next()) {
+					int ix = 0;
+					NamedDestination dest = new NamedDestination();
+					dest.name = result.getString(++ix);
+					dest.serverName = result.getString(++ix);
+					dest.worldName = result.getString(++ix);
+					dest.X = result.getDouble(++ix);
+					dest.Y = result.getDouble(++ix);
+					dest.Z = result.getDouble(++ix);
+					dest.pitch = (float)result.getDouble(++ix);
+					dest.yaw = (float)result.getDouble(++ix);
+					dest.reason = TeleportReason.HOME;
+					all.add(dest);
+				}
+			}
+			finally {
+				result.close();
+			}
+			
+		} catch (SQLException e1) {
+        	plugin.log(Level.SEVERE, "SQLException! " + e1.getMessage());
+		}
+	    
+	    return all;
+	}
+
+
+	public NamedDestination findPlayerHome(String playerUuid, String name) {
+		name = name.toLowerCase();
+    	List<NamedDestination> possible = new ArrayList<NamedDestination>();
+		List<NamedDestination> all = getPlayerHomes(playerUuid);
+		for(Iterator<NamedDestination> i = all.iterator(); i.hasNext(); ) {
+			NamedDestination test = i.next();
+			if (test.name.toLowerCase().startsWith(name)) {
+				possible.add(test);
+			}
+		}
+		if (possible.size() == 1) {
+			return possible.get(0);
+		}
+		return null;
+	}
+
+	public void addPlayerHome(String playerUuid, String playerName,
+			String name, String serverName, String worldName, 
+			int x, int y, int z, float pitch, double yaw) {
+
+    	this.database.execute(
+			"INSERT INTO `" + tablePrefix + "homes` \n" +
+    			"(`bw_playerUUID`, `bw_playerName`, `bw_name`, `bw_serverName`, `bw_worldName`, `bw_posX`, `bw_posY`, `bw_posZ`, `bw_pitch`, `bw_yaw`) \n" +
+    			"VALUES ( \n" +
+    			"'" + playerUuid + "', \n" +
+    			"'" + playerName + "', \n" +
+    			"'" + name + "', \n" +
+    			"'" + serverName + "', \n" +
+    			"'" + worldName + "', \n" +
+    			x + ", \n" +
+    			y + ", \n" +
+    			z + ", \n" +
+    			pitch + ", \n" +
+    			yaw + " ) \n" +
+    			"ON DUPLICATE KEY UPDATE \n" +
+    			"bw_playerName = '" + playerName + "', \n" +
+    			"bw_serverName = '" + serverName + "', \n" +
+    			"bw_worldName = '" + worldName + "', \n" +
+    			"bw_posX = " + x + ", \n" +
+    			"bw_posY = " + y + ", \n" +
+    			"bw_posZ = " + z + ", \n" +
+    			"bw_pitch = " + pitch + ", \n" +
+    			"bw_yaw = " + yaw + "; \n"
+    			);
+	}
+
+
+	public void deletePlayerHome(String playerUuid, String name) {
+		this.database.execute(
+	    		"DELETE FROM `" + tablePrefix + "homes` \n" +
+	    		"WHERE `bw_playerUUID` = '" + playerUuid + "' AND `bw_name` = '" + name + "';");
 	}
 
 }

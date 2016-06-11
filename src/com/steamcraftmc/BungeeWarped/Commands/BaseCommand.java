@@ -1,7 +1,7 @@
 package com.steamcraftmc.BungeeWarped.Commands;
 
 import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
-import com.steamcraftmc.BungeeWarped.Storage.PlayerState;
+import com.steamcraftmc.BungeeWarped.Controllers.PlayerController;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -27,7 +27,7 @@ public abstract class BaseCommand implements CommandExecutor {
         this.plugin.getCommand(this.cmdName).setExecutor(this);
     }
     
-    protected abstract boolean doCommand(Player player, PlayerState state, Command cmd, String[] args);
+    protected abstract boolean doCommand(Player player, PlayerController controller, Command cmd, String[] args);
     
     public final boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (cmd == null || !cmdName.equalsIgnoreCase(cmd.getName()) || !(sender instanceof Player) ||
@@ -40,7 +40,7 @@ public abstract class BaseCommand implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-        PlayerState state = this.plugin.getPlayerState(player);
+        PlayerController state = this.plugin.getPlayerController(player);
         if (player != null && state != null) {
         	return doCommand(player, state, cmd, args);
         }
