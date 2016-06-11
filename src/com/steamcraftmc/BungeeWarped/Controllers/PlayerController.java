@@ -12,10 +12,12 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
 import com.steamcraftmc.BungeeWarped.Storage.NamedDestination;
 import com.steamcraftmc.BungeeWarped.Storage.TeleportReason;
+import com.steamcraftmc.BungeeWarped.Tasks.PendingRequestState;
+import com.steamcraftmc.BungeeWarped.Tasks.PendingTpaRequest;
 
 public class PlayerController {
     private final BungeeWarpedBukkitPlugin plugin;
-    private final Player player;
+    public Player player;
     public final String playerName;
     public final String playerUuid;
 
@@ -25,6 +27,9 @@ public class PlayerController {
 	public boolean isInsidePortal;
 	public long portalEnterTime;
 	public String portalDestination;
+	
+	private PendingTpaRequest pendingRequest;
+	public boolean ignoreRequests;
 
 	public PlayerController(BungeeWarpedBukkitPlugin plugin, Player player) {
         this.plugin = plugin;
@@ -36,12 +41,17 @@ public class PlayerController {
 	public void onPlayerJoin() {
 		joinTime = System.currentTimeMillis();
 		isInsidePortal = true;
+		pendingRequest = null;
 		
 		NamedDestination loc = plugin.dataStore.getPlayerJoinLocation(this.playerUuid);
 		if (loc != null) {
 			teleportToLocation(loc);
 		    plugin.dataStore.removePlayerJoinLocation(this.playerUuid);
 		}
+	}
+
+	public void onPlayerQuit() {
+		completePendingRequest(PendingRequestState.LOGOUT);
 	}
 
 	public void stepIntoPortal(boolean isInPortal, String destination) {
@@ -116,6 +126,26 @@ public class PlayerController {
 				name, plugin.getServerName(), location.getWorld().getName(),
 				location.getBlockX(), location.getBlockY(), location.getBlockZ(), 
 				location.getPitch(), location.getYaw());
-		
+	}
+
+	public boolean completePendingRequest(PendingRequestState state) {
+		PendingTpaRequest old = pendingRequest;
+		pendingRequest = null;
+		if (old != null && old.getState() == PendingRequestState.PENDING) {
+			old.Complete(player, this, state);
+			return true;
+		}
+		return false;
+	}
+
+	public boolean setPendingRequest(PendingTpaRequest req) {
+		completePendingRequest(PendingRequestState.REPLACED);
+		if (ignoreRequests) {
+			req.Complete(player, this, PendingRequestState.DENY);
+			return false;
+		} else {
+			pendingRequest = req;
+			return true;
+		}
 	}
 }

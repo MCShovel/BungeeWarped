@@ -222,7 +222,34 @@ permissions:
         description: 'Allowes to access use tpa/tpahere.'
         default: false
         children:
-            bungeewarped.tp.*: true
+            bungeewarped.tp.there: true
+            bungeewarped.tp.here: true
+            bungeewarped.tp.tptarget: true
+
+#Teleport player permissions
+    bungeewarped.tp.tptarget:
+        description: 'Access to accept/deny requests.'
+        default: false
+        children:
+            bungeewarped.tp.accept: true
+            bungeewarped.tp.deny: true
+            bungeewarped.tp.toggle: true
+
+    bungeewarped.tp.there:
+        description: 'Access to use /tpa command.'
+        default: false
+    bungeewarped.tp.here:
+        description: 'Access to use /tpahere command.'
+        default: false
+    bungeewarped.tp.accept:
+        description: 'Access to use /tpaccept command.'
+        default: false
+    bungeewarped.tp.deny:
+        description: 'Access to use /tpdeny command.'
+        default: false
+    bungeewarped.tp.toggle:
+        description: 'Access to use /tptoggle command.'
+        default: false
 
 #Home user permissions
     bungeewarped.home.*:
@@ -232,10 +259,10 @@ permissions:
             bungeewarped.home.use: true
             bungeewarped.home.create: true
             bungeewarped.home.delete: true
-    bungeewarped.home.tp:
+    bungeewarped.home.use:
         description: 'Access to use /home command.'
         default: false
-    bungeewarped.home.set:
+    bungeewarped.home.create:
         description: 'Access to use /sethome command.'
         default: false
     bungeewarped.home.delete:
@@ -261,39 +288,6 @@ permissions:
             bungeewarped.home.multi.4: true
     bungeewarped.home.multi.unlimited:
         description: 'Allows a user to have unlimited named homes.'
-
-#Teleport player permissions
-    bungeewarped.user.tp:
-        description: 'Access to use home commands.'
-        default: false
-        children:
-            bungeewarped.tp.there: true
-            bungeewarped.tp.here: true
-            bungeewarped.user.tptarget: true
-
-    bungeewarped.user.tptarget:
-        description: 'Access to accept/deny requests.'
-        default: false
-        children:
-            bungeewarped.tp.accept: true
-            bungeewarped.tp.deny: true
-            bungeewarped.tp.toggle: true
-
-    bungeewarped.tp.there:
-        description: 'Access to use /tpa command.'
-        default: false
-    bungeewarped.tp.here:
-        description: 'Access to use /tpahere command.'
-        default: false
-    bungeewarped.tp.accept:
-        description: 'Access to use /tpaccept command.'
-        default: false
-    bungeewarped.tp.deny:
-        description: 'Access to use /tpdeny command.'
-        default: false
-    bungeewarped.tp.toggle:
-        description: 'Access to use /tptoggle command.'
-        default: false
 
     bungeewarped.vanillaportal.use:
         description: 'Allows users to teleport with vanilla portals'

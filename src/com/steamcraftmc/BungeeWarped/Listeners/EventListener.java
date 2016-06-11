@@ -12,6 +12,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 
 public class EventListener implements Listener {
@@ -22,9 +23,14 @@ public class EventListener implements Listener {
         this.plugin = plugin;
     }
     
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerJoinEvent(PlayerJoinEvent e) {
 		this.plugin.registerPlayerJoined(e.getPlayer());
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerQuitEvent(PlayerQuitEvent e) {
+		this.plugin.getPlayerController(e.getPlayer()).onPlayerQuit();
     }
 
     @EventHandler

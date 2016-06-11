@@ -126,4 +126,92 @@ public class BungeeWarpedConfig {
 		message = message.replace("{needed}", String.valueOf(needed));
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
+
+	public String TpaTimeoutExpired() {
+		String message = getString("TpaTimeoutExpired", "&6The request has timed out.");
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+	
+	public String TpaRequest(String player) {
+		String message = getString("TpaRequest", 
+				"&c{player}&6 has requested to teleport to you.\n" +
+				"To teleport, type &2/tpaccept&6.\n" +
+				"To deny this request, type &c/tpdeny&6.\n" +
+				"This request will timeout after &c120 seconds&6."
+				);
+		message = message.replace("{player}", player);
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+	
+	public String TpaHereRequest(String player) {
+		String message = getString("TpaHereRequest", 
+				"&c{player}&6 has requested you to teleport to them.\n" +
+				"To teleport, type &2/tpaccept&6.\n" +
+				"To deny this request, type &c/tpdeny&6.\n" +
+				"This request will timeout after &c120 seconds&6."
+				);
+		message = message.replace("{player}", player);
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String NoPendingRequest() {
+		String message = getString("NoPendingRequest", "&cYou do not have a pending request.");
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String TeleportAccepted() {
+		String message = getString("TeleportAccepted", "&6Teleport request accepted.");
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String TeleportDenied() {
+		String message = getString("TeleportDenied", "&6Teleport request denied.");
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String TpRequestIgnore() {
+		String message = getString("TpRequestIgnore", "&6Now ignoring teleport requests.");
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String TpRequestUnignore() {
+		String message = getString("TpRequestUnignore", "&6Now accepting teleport requests.");
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String RequestAccepted(String player) {
+		String message = getString("RequestAccepted", "&c{player} &6has accepted your request.");
+		message = message.replace("{player}", player);
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String RequestCancelled(String player) {
+		String message = getString("RequestCancelled", "&6Teleport request cancelled.");
+		message = message.replace("{player}", player);
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String RequestDenied(String player) {
+		String message = getString("RequestDenied", "&c{player} &6has denied your request.");
+		message = message.replace("{player}", player);
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String RequestTargetLogout(String player) {
+		String message = getString("RequestTargetLogout", "&c{player} &6has logged out.");
+		message = message.replace("{player}", player);
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String RequestTimeout(String player) {
+		String message = getString("RequestTimeout", "&6Teleport request timed out.");
+		message = message.replace("{player}", player);
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String RequestInterrupt(String player) {
+		String message = getString("RequestInterrupt", "&6Teleport request was interrupted by someone else.");
+		message = message.replace("{player}", player);
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
 }
