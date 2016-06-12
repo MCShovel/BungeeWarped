@@ -12,7 +12,7 @@ import com.steamcraftmc.BungeeWarped.Storage.TeleportReason;
 public class CmdTpPosition extends BaseCommand {
 
 	public CmdTpPosition(BungeeWarpedBukkitPlugin plugin) {
-		super(plugin, "bungeewarped.op.tppos", "tppos", 3, 7);
+		super(plugin, "bungeewarped.tppos", "tppos", 3, 7);
 	}
 
 	@Override

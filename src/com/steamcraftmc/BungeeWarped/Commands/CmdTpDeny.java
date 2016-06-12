@@ -10,7 +10,7 @@ import com.steamcraftmc.BungeeWarped.Tasks.PendingRequestState;
 public class CmdTpDeny extends BaseCommand {
 
 	public CmdTpDeny(BungeeWarpedBukkitPlugin plugin) {
-		super(plugin, "bungeewarped.tp.deny", "tpdeny", 0, 0);
+		super(plugin, "bungeewarped.tpaccept", "tpdeny", 0, 0);
 	}
 
 	@Override

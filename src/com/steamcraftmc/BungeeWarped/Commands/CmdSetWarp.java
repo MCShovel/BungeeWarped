@@ -1,6 +1,5 @@
 package com.steamcraftmc.BungeeWarped.Commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -12,16 +11,11 @@ import com.steamcraftmc.BungeeWarped.Controllers.PlayerController;
 public class CmdSetWarp extends BaseCommand {
 
 	public CmdSetWarp(BungeeWarpedBukkitPlugin plugin) {
-		super(plugin, "bungeewarped.warp.create", "setwarp", 1, 1);
+		super(plugin, "bungeewarped.setwarp", "setwarp", 1, 1);
 	}
 
 	@Override
 	protected boolean doCommand(Player player, PlayerController state, Command cmd, String[] args) {
-		if (plugin.bungeeServerName == null) {
-            player.sendMessage(ChatColor.RED + "BungeeCord server name was not found.");
-			return true;
-		}
-
 		if (args.length == 1) {
 			createDestination(player, args[0]);
 			return true;
@@ -45,6 +39,6 @@ public class CmdSetWarp extends BaseCommand {
     		loc.getPitch(),
     		loc.getYaw()
 		);	
-        player.sendMessage(ChatColor.GOLD + "Warp '" + destName + "' created.");
+        player.sendMessage(plugin.config.WarpSetConfirm(destName));
 	}
 }

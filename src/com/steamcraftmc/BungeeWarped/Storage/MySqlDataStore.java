@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
 import com.steamcraftmc.BungeeWarped.Storage.NamedDestination;
@@ -230,10 +229,15 @@ public class MySqlDataStore {
 
 	public NamedDestination findDestinationForPlayer(Player player, String name) {
 		NamedDestination dest = findDestination(name);
-        if (dest == null || (!player.hasPermission("bungeewarped.warp.location.*") && !player.hasPermission("bungeewarped.warp.location." + dest.name.toLowerCase()))) {
-        	player.sendMessage(ChatColor.RED + "That location does not exist.");
+        if (dest == null) {
+        	player.sendMessage(plugin.config.WarpNotFound(name));
             return null;
         }
+        if (!player.hasPermission("bungeewarped.location.*") && !player.hasPermission("bungeewarped.location." + dest.name.toLowerCase())) {
+        	player.sendMessage(plugin.config.NoPortalAccess(dest.name));
+            return null;
+        }
+        
         return dest;
 	}
 	

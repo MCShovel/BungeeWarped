@@ -39,7 +39,15 @@ public class BungeeWarpedBukkitPlugin extends JavaPlugin implements PluginMessag
     	config = new BungeeWarpedConfig(this);
 		dataStore = new MySqlDataStore(this);
     }
-    
+
+	public boolean isReady(Player player) {
+		if (bungeeServerName == null) {
+			player.sendMessage(config.BungeeCordError());
+			return false;
+		}
+		return true;
+	}
+
     public void onEnable() {
         long time = System.currentTimeMillis();
         if (getServer().getPluginManager().getPlugin("WorldEdit") != null) {

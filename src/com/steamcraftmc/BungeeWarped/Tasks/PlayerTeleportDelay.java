@@ -32,8 +32,8 @@ public class PlayerTeleportDelay implements Runnable {
 		this.effects = plugin.config.getTpEffects(dest.reason);
 		this.effectStrength = 1;
 		
-		if (ctrl.player.hasPermission("bungeewarped.op.bypass.*")
-			|| ctrl.player.hasPermission("bungeewarped.op.bypass.delay." + dest.reason.toString().toLowerCase())) {
+		if (ctrl.player.hasPermission("bungeewarped.bypass.*")
+			|| ctrl.player.hasPermission("bungeewarped.bypass." + dest.reason.toString().toLowerCase())) {
 			this.delay = 0;
 			this.effects = false;
 		}

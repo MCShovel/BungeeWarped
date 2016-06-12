@@ -9,7 +9,7 @@ import com.steamcraftmc.BungeeWarped.Controllers.PlayerController;
 public class CmdTpOverride extends BaseCommand {
 
 	public CmdTpOverride(BungeeWarpedBukkitPlugin plugin) {
-		super(plugin, "bungeewarped.op.tpo", "tpo", 1, 2);
+		super(plugin, "bungeewarped.tpo", "tpo", 1, 2);
 	}
 
 	@Override

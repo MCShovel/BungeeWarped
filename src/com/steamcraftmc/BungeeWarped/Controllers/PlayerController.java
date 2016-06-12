@@ -64,9 +64,11 @@ public class PlayerController {
 		if (!this.isInsidePortal && isInPortal) {
 			this.portalEnterTime = System.currentTimeMillis();
 			this.isInsidePortal = true;
-			
-			if (!player.hasPermission("bungeewarped.portal.use")) {
+
+			if (!player.hasPermission("bungeewarped.location.*")
+			    && !player.hasPermission("bungeewarped.location." + destination.toLowerCase())) {
 	    	    player.sendMessage(plugin.config.NoPortalAccess(destination));
+	    	    return;
 			}
 			teleportToDestinationName(destination, TeleportReason.PORTAL);
 		}
@@ -93,7 +95,7 @@ public class PlayerController {
         	player.sendMessage(ChatColor.RED + "The destination does not exist.");
         	return;
         }
-        else if(!player.hasPermission("bungeewarped.warp.location.*") && !player.hasPermission("bungeewarped.warp.location." + dest.name.toLowerCase())) {
+        else if(!player.hasPermission("bungeewarped.location.*") && !player.hasPermission("bungeewarped.location." + dest.name.toLowerCase())) {
     	    player.sendMessage(plugin.config.NoPortalAccess(dest.name));
             return;
         }
@@ -189,11 +191,11 @@ public class PlayerController {
 		int cooldown = plugin.config.getTpCooldownTime(reason);
 		int combatDelay = plugin.config.getCombatDelay(reason);
 
-		if (player.hasPermission("bungeewarped.op.bypass.*") 
-			|| player.hasPermission("bungeewarped.op.bypass.delay." + reason.toString().toLowerCase())) {
+		if (player.hasPermission("bungeewarped.bypass.*")
+			|| player.hasPermission("bungeewarped.bypass." + reason.toString().toLowerCase())) {
 			cooldown = 0;
 		}
-		if (player.hasPermission("bungeewarped.op.bypass.*") || player.hasPermission("bungeewarped.op.bypass.delay.combat")) {
+		if (player.hasPermission("bungeewarped.bypass.*") || player.hasPermission("bungeewarped.bypass.combat")) {
 			combatDelay = 0;
 		}
 		

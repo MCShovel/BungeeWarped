@@ -1,9 +1,10 @@
 package com.steamcraftmc.BungeeWarped.Commands;
 
+import java.util.logging.Level;
+
 import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
 import com.steamcraftmc.BungeeWarped.Controllers.PlayerController;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,16 +31,22 @@ public abstract class BaseCommand implements CommandExecutor {
     protected abstract boolean doCommand(Player player, PlayerController controller, Command cmd, String[] args);
     
     public final boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+    	
         if (cmd == null || !cmdName.equalsIgnoreCase(cmd.getName()) || !(sender instanceof Player) ||
         		args == null || args.length < minArgs || args.length > maxArgs) {
             return false;
         }
+        Player player = (Player) sender;
+        
         if (!sender.hasPermission(permission)) {
-            sender.sendMessage(ChatColor.RED + "You do not have permission to use that command.");
+            sender.sendMessage(plugin.config.PermissionDenied(permission));
+            plugin.log(Level.SEVERE, "The user " + player.getName() + " need permission " + permission + " to access to the command " + cmdName);
             return true;
         }
+		if (!plugin.isReady(player)) {
+			return true;
+		}
 
-        Player player = (Player) sender;
         PlayerController state = this.plugin.getPlayerController(player);
         if (player != null && state != null) {
         	return doCommand(player, state, cmd, args);

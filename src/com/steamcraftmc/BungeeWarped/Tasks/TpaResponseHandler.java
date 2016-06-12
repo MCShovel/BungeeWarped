@@ -58,6 +58,9 @@ public class TpaResponseHandler implements Runnable {
 			case TPCOOLDOWN:
 				player.sendMessage(plugin.config.RequesteeOnCooldown(fromPlayer));
 				break;
+			case NOTALLOWED:
+				player.sendMessage(plugin.config.RequesteeCanNotTp(fromPlayer));
+				break;
 			case FORCED:
 				if (destination != null) {
 					destination.reason = TeleportReason.TPO;

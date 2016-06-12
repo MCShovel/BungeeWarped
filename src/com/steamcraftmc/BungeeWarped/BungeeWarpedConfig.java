@@ -132,8 +132,57 @@ public class BungeeWarpedConfig {
 	// Messages:
 	// ***********************************************************************
 	
+	public String BungeeCordError() {
+		String message = getString("BungeeCordError", "&cBungeeCord has not responded, check your configuration.");
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String PermissionDenied(String name) {
+		String message = getString("PermissionDenied", "&4You do not have permission to use that command.");
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+	
+	public String ConfigReloaded() {
+		String message = getString("ConfigReloaded", "&6All configuration files and data have been reloaded.");
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+	
+	public String WorldEditMissing() {
+		String message = getString("WorldEditMissing", "&cUnable to locate WorldEdit plugin.");
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+	
+	public String WorldEditNoSel() {
+		String message = getString("WorldEditNoSel", "&cPlease make a WorldEdit selection.");
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String EmptySelection() {
+		String message = getString("EmptySelection", "&cThe selection is currently empty.");
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String SelectionTooLarge(int blocks) {
+		String message = getString("SelectionTooLarge", "&cThe selected area of {blocks} blocks is too large.");
+		message = message.replace("{blocks}", String.valueOf(blocks));
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String PortalCreated(String name, int size) {
+		String message = getString("PortalCreated", "&6Portal created to {name} ({size} blocks).");
+		message = message.replace("{name}", name);
+		message = message.replace("{size}", String.valueOf(size));
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+	
+	public String PortalRemoved(int size) {
+		String message = getString("PortalRemoved", "&6Removed {size} portal blocks).");
+		message = message.replace("{size}", String.valueOf(size));
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+	
 	public String NoPortalAccess(String dest) {
-		String message = getString("NoPortalPermissionMessage", "&cYou do not have access to use that.");
+		String message = getString("NoPortalAccess", "&cYou do not have access to use that.");
 		message = message.replace("{destination}", dest);
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
@@ -144,15 +193,63 @@ public class BungeeWarpedConfig {
 	}
 
 	public String NoHomeFoundByName(String name) {
-		String message = getString("NoHomeFoundByName", "&cYou do not have a home called '{name}'.");
+		String message = getString("NoHomeFoundByName", "&6Home &c{name} &6was not found.");
 		message = message.replace("{name}", name);
 		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String HomeSetConfirm(String name) {
+		String message = getString("HomeSetConfirm", "&6Home &c{name}&6 created.");
+		message = message.replace("{name}", String.valueOf(name));
+		return ChatColor.translateAlternateColorCodes('&', message);		
+	}
+
+	public String HomeDelConfirm(String name) {
+		String message = getString("HomeDelConfirm", "&6Home &c{name}&6 removed.");
+		message = message.replace("{name}", String.valueOf(name));
+		return ChatColor.translateAlternateColorCodes('&', message);		
+	}
+
+	public String HomesList(String list) {
+		String message = getString("HomesList", "&6Homes&f: {list}");
+		message = message.replace("{list}", String.valueOf(list));
+		return ChatColor.translateAlternateColorCodes('&', message);		
 	}
 
 	public String NoMoreHomesAllowed(int needed) {
 		String message = getString("NoMoreHomesAllowed", "&cYou have too many homes set, use /delhome to remove some.");
 		message = message.replace("{needed}", String.valueOf(needed));
 		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String WarpFullName(String name) {
+		String message = getString("WarpFullName", "&6Use the full warp name &c{name}&6.");
+		message = message.replace("{name}", name);
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+	
+	public String WarpNotFound(String name) {
+		String message = getString("WarpNotFound", "&6Warp &c{name} &6was not found.");
+		message = message.replace("{name}", name);
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String WarpSetConfirm(String name) {
+		String message = getString("WarpSetConfirm", "&6Warp &c{name}&6 created.");
+		message = message.replace("{name}", String.valueOf(name));
+		return ChatColor.translateAlternateColorCodes('&', message);		
+	}
+
+	public String WarpDelConfirm(String name) {
+		String message = getString("WarpDelConfirm", "&6Warp &c{name}&6 removed.");
+		message = message.replace("{name}", String.valueOf(name));
+		return ChatColor.translateAlternateColorCodes('&', message);		
+	}
+
+	public String WarpsList(String list) {
+		String message = getString("WarpsList", "&6Warps&f: {list}");
+		message = message.replace("{list}", String.valueOf(list));
+		return ChatColor.translateAlternateColorCodes('&', message);		
 	}
 
 	public String TpaTimeoutExpired() {
@@ -244,11 +341,23 @@ public class BungeeWarpedConfig {
 	}
 
 	public String RequesteeOnCooldown(String player) {
-		String message = getString("RequesteeOnCooldown", "&cThat use is unable to teleport right now.");
+		String message = getString("RequesteeOnCooldown", "&cThat user is unable to teleport right now.");
 		message = message.replace("{player}", player);
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 
+	public String RequesteeCanNotTp(String player) {
+		String message = getString("RequesteeCanNotTp", "&cThat user is not allowed to teleport.");
+		message = message.replace("{player}", player);
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String PlayerNotFound(String player) {
+		String message = getString("PlayerNotFound", "&cPlayer not found.");
+		message = message.replace("{player}", player);
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+	
 	public String TeleportingAfterDelay(int delay) {
 		String message = getString("TeleportingAfterDelay", "&8Teleporting in {delay} seconds...");
 		message = message.replace("{delay}", String.valueOf(delay));

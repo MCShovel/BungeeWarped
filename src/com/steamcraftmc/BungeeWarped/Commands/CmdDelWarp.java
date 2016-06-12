@@ -1,6 +1,5 @@
 package com.steamcraftmc.BungeeWarped.Commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 
@@ -11,7 +10,7 @@ import com.steamcraftmc.BungeeWarped.Controllers.PlayerController;
 public class CmdDelWarp extends BaseCommand {
 
 	public CmdDelWarp(BungeeWarpedBukkitPlugin plugin) {
-		super(plugin, "bungeewarped.warp.delete", "delwarp", 1, 1);
+		super(plugin, "bungeewarped.setwarp", "delwarp", 1, 1);
 	}
 
 	@Override
@@ -31,10 +30,13 @@ public class CmdDelWarp extends BaseCommand {
 		if (dest != null) {
 			if (dest.name.equalsIgnoreCase(name)) {
 				plugin.dataStore.deleteDestination(player, dest.name);
-		        player.sendMessage(ChatColor.GOLD + "Warp '" + dest.name + "' removed.");
+		        player.sendMessage(plugin.config.WarpDelConfirm(dest.name));
 			} else {
-		        player.sendMessage(ChatColor.RED + "Specify the full warp name '" + dest.name + "' to remove.");
+		        player.sendMessage(plugin.config.WarpFullName(dest.name));
 			}
+		}
+		else {
+	        player.sendMessage(plugin.config.WarpNotFound(name));
 		}
 	}
 }

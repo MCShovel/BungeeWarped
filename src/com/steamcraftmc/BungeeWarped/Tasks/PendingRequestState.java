@@ -9,5 +9,6 @@ public enum PendingRequestState {
 	REPLACED,
 	LOGOUT, 
 	FORCED, 
-	TPCOOLDOWN
+	TPCOOLDOWN,
+	NOTALLOWED
 }

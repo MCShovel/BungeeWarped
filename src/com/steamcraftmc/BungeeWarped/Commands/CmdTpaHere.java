@@ -11,7 +11,7 @@ import com.steamcraftmc.BungeeWarped.Storage.TeleportReason;
 public class CmdTpaHere extends BaseCommand {
 
 	public CmdTpaHere(BungeeWarpedBukkitPlugin plugin) {
-		super(plugin, "bungeewarped.tp.here", "tpahere", 1, 1);
+		super(plugin, "bungeewarped.tpahere", "tpahere", 1, 1);
 	}
 
 	@Override

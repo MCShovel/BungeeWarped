@@ -9,7 +9,7 @@ import com.steamcraftmc.BungeeWarped.Controllers.PlayerController;
 public class CmdTpToggle extends BaseCommand {
 
 	public CmdTpToggle(BungeeWarpedBukkitPlugin plugin) {
-		super(plugin, "bungeewarped.tp.toggle", "tptoggle", 0, 0);
+		super(plugin, "bungeewarped.tpaccept", "tptoggle", 0, 0);
 	}
 
 	@Override

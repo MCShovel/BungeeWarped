@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
@@ -30,8 +29,7 @@ public class BungeePlayerMessage implements Runnable, PluginMessageListener {
 	}
 
 	public void start() {
-		if (!plugin.config.enableBungeeCord()) {
-			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cPlayer not found."));
+		if (!plugin.isReady(sender)) {
 			return;
 		}
 
@@ -83,7 +81,7 @@ public class BungeePlayerMessage implements Runnable, PluginMessageListener {
 			}
 
 			if (!exact && possible.size() != 1) {
-				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cPlayer not found."));
+				sender.sendMessage(plugin.config.PlayerNotFound(target));
 				return;
 			}
 			if (!exact) {

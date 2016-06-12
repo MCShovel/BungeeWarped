@@ -13,7 +13,7 @@ import com.steamcraftmc.BungeeWarped.Storage.NamedDestination;
 public class CmdSetHome extends BaseCommand {
 
 	public CmdSetHome(BungeeWarpedBukkitPlugin plugin) {
-		super(plugin, "bungeewarped.home.create", "sethome", 0, 1);
+		super(plugin, "bungeewarped.home", "sethome", 0, 1);
 	}
 
 	@Override
@@ -38,13 +38,14 @@ public class CmdSetHome extends BaseCommand {
 		int needed = existing.size() - (replace ? 1 : 0);
 		if (needed > 1) {
 			if (!player.hasPermission("bungeewarped.home.multi." + String.valueOf(needed)) && 
-					!player.hasPermission("bungeewarped.home.multi.unlimited")) {
+					!player.hasPermission("bungeewarped.home.unlimited")) {
 				player.sendMessage(plugin.config.NoMoreHomesAllowed(needed));
 				return true;
 			}
 		}
 		
 		ctrl.setHome(name, player.getLocation());
+		player.sendMessage(plugin.config.HomeSetConfirm(name));
 		return true;
 	}
 

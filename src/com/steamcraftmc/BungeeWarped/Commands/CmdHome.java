@@ -3,7 +3,6 @@ package com.steamcraftmc.BungeeWarped.Commands;
 import java.util.Iterator;
 import java.util.List;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 
@@ -15,7 +14,7 @@ import com.steamcraftmc.BungeeWarped.Storage.TeleportReason;
 public class CmdHome extends BaseCommand {
 
 	public CmdHome(BungeeWarpedBukkitPlugin plugin) {
-		super(plugin, "bungeewarped.home.use", "home", 0, 1);
+		super(plugin, "bungeewarped.home", "home", 0, 1);
 	}
 
 	@Override
@@ -49,7 +48,7 @@ public class CmdHome extends BaseCommand {
 	        		sb.append(dest.name);
 				}
 
-		    	player.sendMessage(ChatColor.GOLD + "Warps" + ChatColor.WHITE + ": " + sb);
+		    	player.sendMessage(plugin.config.HomesList(sb.toString()));
 			}
 			return true;
 		}

@@ -10,7 +10,7 @@ import com.steamcraftmc.BungeeWarped.Tasks.PendingRequestState;
 public class CmdTpAccept extends BaseCommand {
 
 	public CmdTpAccept(BungeeWarpedBukkitPlugin plugin) {
-		super(plugin, "bungeewarped.tp.accept", "tpaccept", 0, 0);
+		super(plugin, "bungeewarped.tpaccept", "tpaccept", 0, 0);
 	}
 
 	@Override

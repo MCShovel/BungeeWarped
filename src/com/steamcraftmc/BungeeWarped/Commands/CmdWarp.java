@@ -3,7 +3,6 @@ package com.steamcraftmc.BungeeWarped.Commands;
 import java.util.Iterator;
 import java.util.List;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 
@@ -15,7 +14,7 @@ import com.steamcraftmc.BungeeWarped.Controllers.PlayerController;
 public class CmdWarp extends BaseCommand {
 
 	public CmdWarp(BungeeWarpedBukkitPlugin plugin) {
-		super(plugin, "bungeewarped.warp.use", "warp", 0, 1);
+		super(plugin, "bungeewarped.warp", "warp", 0, 1);
 	}
 
 	@Override
@@ -41,10 +40,10 @@ public class CmdWarp extends BaseCommand {
 		NamedDestination dest = plugin.dataStore.findDestinationForPlayer(player, name);
 
         if (dest == null || dest.name == null) {
-        	player.sendMessage(ChatColor.RED + "The destination does not exist.");
+        	player.sendMessage(plugin.config.WarpNotFound(name));
         	return;
         }
-        else if(!player.hasPermission("bungeewarped.warp.location.*") && !player.hasPermission("bungeewarped.warp.location." + dest.name.toLowerCase())) {
+        else if(!player.hasPermission("bungeewarped.location.*") && !player.hasPermission("bungeewarped.location." + dest.name.toLowerCase())) {
     	    player.sendMessage(plugin.config.NoPortalAccess(dest.name));
             return;
         }
@@ -60,7 +59,7 @@ public class CmdWarp extends BaseCommand {
 		for(Iterator<NamedDestination> i = possible.iterator(); i.hasNext(); ) {
 			NamedDestination dest = i.next();
 
-	        if (player.hasPermission("bungeewarped.warp.location.*") || player.hasPermission("bungeewarped.warp.location." + dest.name.toLowerCase())) {
+	        if (player.hasPermission("bungeewarped.location.*") || player.hasPermission("bungeewarped.location." + dest.name.toLowerCase())) {
 	        	if (sb.length() > 0) {
 	        		sb.append(", ");
 	        	}
@@ -68,6 +67,6 @@ public class CmdWarp extends BaseCommand {
 	        }
 		}
 
-    	player.sendMessage(ChatColor.GOLD + "Warps" + ChatColor.WHITE + ": " + sb);
+    	player.sendMessage(plugin.config.WarpsList(sb.toString()));
 	}
 }

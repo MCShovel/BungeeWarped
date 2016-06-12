@@ -50,7 +50,7 @@ public class EventListener implements Listener {
     @EventHandler
     public void onPlayerPortalEvent(org.bukkit.event.player.PlayerPortalEvent event) {
 		Player player = event.getPlayer();
-		if (!player.hasPermission("bungeewarped.vanillaportal.use")) {
+		if (!player.hasPermission("bungeewarped.vanillaportals")) {
 			event.setCancelled(true);
 		}
     }

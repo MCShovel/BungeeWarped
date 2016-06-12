@@ -1,6 +1,5 @@
 package com.steamcraftmc.BungeeWarped.Commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 
@@ -11,7 +10,7 @@ import com.steamcraftmc.BungeeWarped.Storage.NamedDestination;
 public class CmdDelHome extends BaseCommand {
 
 	public CmdDelHome(BungeeWarpedBukkitPlugin plugin) {
-		super(plugin, "bungeewarped.home.delete", "delhome", 0, 1);
+		super(plugin, "bungeewarped.home", "delhome", 0, 1);
 	}
 
 	@Override
@@ -26,9 +25,9 @@ public class CmdDelHome extends BaseCommand {
 		NamedDestination existing = plugin.dataStore.findPlayerHome(ctrl.playerUuid, name);
 		if (existing != null) {
 			plugin.dataStore.deletePlayerHome(ctrl.playerUuid, existing.name);
-	        player.sendMessage(ChatColor.GOLD + "Home '" + existing.name + "' removed.");
+			player.sendMessage(plugin.config.HomeDelConfirm(existing.name));
 		} else {
-	        player.sendMessage(ChatColor.RED + "The home was not found.");
+	        player.sendMessage(plugin.config.NoHomeFoundByName(name));
 		}
 
 		return true;

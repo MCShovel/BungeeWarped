@@ -18,7 +18,7 @@ import com.steamcraftmc.BungeeWarped.Utils.WorldEditUtil;
 public class CmdPortal extends BaseCommand {
 
 	public CmdPortal(BungeeWarpedBukkitPlugin plugin) {
-		super(plugin, "bungeewarped.portal.cmd", "portal", 0, 2);
+		super(plugin, "bungeewarped.portal", "portal", 0, 2);
 	}
 
 	@Override
@@ -55,10 +55,8 @@ public class CmdPortal extends BaseCommand {
         if (sender.hasPermission("bungeewarped.*")) {
         	sender.sendMessage(ChatColor.GOLD + "/portal reload" + ChatColor.WHITE + ": Reload all files and data.");
         }
-        if (sender.hasPermission("bungeewarped.portal.create")) {
+        if (sender.hasPermission("bungeewarped.portal")) {
         	sender.sendMessage(ChatColor.GOLD + "/portal create <warp>" + ChatColor.WHITE + ": Create a portal to a warp.");
-        }
-        if (sender.hasPermission("bungeewarped.portal.delete")) {
         	sender.sendMessage(ChatColor.GOLD + "/portal remove" + ChatColor.WHITE + ": Remove a portal.");
         }
         sender.sendMessage(ChatColor.BLUE + "Visit http://github.com/MCShovel/BungeeWarped/wiki for help.");
@@ -66,18 +64,18 @@ public class CmdPortal extends BaseCommand {
 
     private void reloadConfig(CommandSender sender) {
         plugin.reload();
-        sender.sendMessage(ChatColor.GREEN + "All configuration files and data have been reloaded.");
+        sender.sendMessage(plugin.config.ConfigReloaded());
 	}
     
     private List<String> getWorldEditSelection(Player player) {
     	if (plugin.worldEdit == null) {
-    		player.sendMessage(ChatColor.RED + "Unable to locate WorldEdit plugin.");
+    		player.sendMessage(plugin.config.WorldEditMissing());
             return null;
     	}
     	
     	WorldEditUtil weUtil = new WorldEditUtil(plugin);
     	if (!weUtil.hasSelection(player)) {
-    		player.sendMessage(ChatColor.RED + "Please make a WorldEdit selection.");
+    		player.sendMessage(plugin.config.WorldEditNoSel());
             return null;
     	}
     	
@@ -102,11 +100,11 @@ public class CmdPortal extends BaseCommand {
         }
 
         if (blocks.size() == 0) {
-    		player.sendMessage(ChatColor.RED + "Unable to create an empty portal.");
+    		player.sendMessage(plugin.config.EmptySelection());
             return null;
         }
         if (blocks.size() > 1000) {
-    		player.sendMessage(ChatColor.RED + "Unable to create portals with over 1,000 blocks (size is " + blocks.size() + ").");
+    		player.sendMessage(plugin.config.SelectionTooLarge(blocks.size()));
             return null;
         }
 
@@ -123,7 +121,7 @@ public class CmdPortal extends BaseCommand {
         	plugin.dataStore.addPortalBlock(block, name);
             plugin.portalData.put(block, name);
         }
-        player.sendMessage(ChatColor.GREEN + String.valueOf(selection.size()) + " portal blocks created to " + name + ".");
+        player.sendMessage(plugin.config.PortalCreated(name, selection.size()));
 	}
 	
 	private void removePortal(Player player) {
@@ -140,7 +138,7 @@ public class CmdPortal extends BaseCommand {
                 count++;
             }
         }
-        player.sendMessage(ChatColor.GREEN + String.valueOf(count) + " portals have been removed.");
+        player.sendMessage(plugin.config.PortalRemoved(count));
 	}
 
 }

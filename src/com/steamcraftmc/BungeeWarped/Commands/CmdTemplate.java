@@ -9,7 +9,7 @@ import com.steamcraftmc.BungeeWarped.Controllers.PlayerController;
 public class CmdTemplate extends BaseCommand {
 
 	public CmdTemplate(BungeeWarpedBukkitPlugin plugin) {
-		super(plugin, "bungeewarped.portal.cmd", "portal", 0, 1);
+		super(plugin, "bungeewarped.", "command", 0, 1);
 	}
 
 	@Override
