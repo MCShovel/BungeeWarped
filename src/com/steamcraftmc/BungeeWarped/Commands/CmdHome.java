@@ -22,7 +22,7 @@ public class CmdHome extends BaseCommand {
 	protected boolean doCommand(Player player, PlayerController state, Command cmd, String[] args) {
 
 		PlayerController ctrl = plugin.getPlayerController(player);
-		if (!ctrl.verifyCooldownForTp(TeleportReason.HOME)) {
+		if (!ctrl.verifyCooldownForTp(TeleportReason.HOME, true)) {
 			return true;
 		}
 		

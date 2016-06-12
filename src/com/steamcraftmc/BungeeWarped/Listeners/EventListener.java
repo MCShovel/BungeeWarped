@@ -6,10 +6,12 @@ import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
 import com.steamcraftmc.BungeeWarped.Controllers.PlayerController;
 
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -53,4 +55,18 @@ public class EventListener implements Listener {
 		}
     }
 
+	@EventHandler(priority=EventPriority.NORMAL)
+	public void onEntityDamageEvent(EntityDamageByEntityEvent event) {
+		if(event.getEntity() instanceof Player) {
+        	Player player = (Player) event.getEntity();
+			Entity eattck = event.getDamager();
+			if (eattck != null && eattck instanceof Player) {
+				Player attacker = (Player)eattck;
+
+				plugin.getPlayerController(player).onCombatTag();
+				plugin.getPlayerController(attacker).onCombatTag();
+			}
+        }
+	}
+	
 }

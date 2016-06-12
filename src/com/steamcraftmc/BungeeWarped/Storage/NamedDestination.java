@@ -1,7 +1,5 @@
 package com.steamcraftmc.BungeeWarped.Storage;
 
-import java.io.StringReader;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;

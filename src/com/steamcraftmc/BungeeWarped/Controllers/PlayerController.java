@@ -170,21 +170,22 @@ public class PlayerController {
 	}
 	
 	private int checkCombatDelay(int combatDelay) {
-
 		long now = System.currentTimeMillis();
-		long diff = now - (lastCombat + (combatDelay * 1000));
-		diff /= 1000;
-		return diff > 0 ? Math.abs((int)diff) : 0;
+		long exp = lastCombat + (combatDelay * 1000);
+		if (now > exp) 
+			return 0;
+		return (int)((exp - now) / 1000);
 	}
 
 	private int checkCooldownTime(int cooldown) {
 		long now = System.currentTimeMillis();
-		long diff = now - (lastTpTime + (cooldown * 1000));
-		diff /= 1000;
-		return diff > 0 ? Math.abs((int)diff) : 0;
+		long exp = lastTpTime + (cooldown * 1000);
+		if (now > exp) 
+			return 0;
+		return (int)((exp - now) / 1000);
 	}
 	
-	public boolean verifyCooldownForTp(TeleportReason reason) {
+	public boolean verifyCooldownForTp(TeleportReason reason, boolean notify) {
 		int cooldown = plugin.config.getTpCooldownTime(reason);
 		int combatDelay = plugin.config.getCombatDelay(reason);
 
@@ -199,14 +200,16 @@ public class PlayerController {
 		if (combatDelay > 0) {
 			int waitTime = checkCombatDelay(combatDelay);
 			if (waitTime > 0) {
-				player.sendMessage(plugin.config.TeleportCancelledCombat(waitTime));
+				if (notify)
+					player.sendMessage(plugin.config.TeleportCancelledCombat(waitTime));
 				return false;
 			}
 		}
 		if (cooldown > 0) {
 			int waitTime = checkCooldownTime(cooldown);
 			if (waitTime > 0) {
-				player.sendMessage(plugin.config.TeleportCancelledCooldown(waitTime));
+				if (notify)
+					player.sendMessage(plugin.config.TeleportCancelledCooldown(waitTime));
 				return false;
 			}
 		}

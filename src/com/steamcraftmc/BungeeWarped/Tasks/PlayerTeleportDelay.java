@@ -40,7 +40,7 @@ public class PlayerTeleportDelay implements Runnable {
 	}
 
 	public void start() {
-		if (!playerCtrl.verifyCooldownForTp(this.destination.reason)) {
+		if (!playerCtrl.verifyCooldownForTp(this.destination.reason, true)) {
 			return;
 		}
 
@@ -112,6 +112,7 @@ public class PlayerTeleportDelay implements Runnable {
 			effect.apply(playerCtrl.player);
 		}
 		else if (!startmsg) {
+			startmsg = true;
 			playerCtrl.player.sendMessage(plugin.config.TeleportingAfterDelay(delay + 1));
 		}
 	}

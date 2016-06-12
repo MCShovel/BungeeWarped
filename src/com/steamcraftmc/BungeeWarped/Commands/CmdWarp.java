@@ -20,7 +20,7 @@ public class CmdWarp extends BaseCommand {
 
 	@Override
 	protected boolean doCommand(Player player, PlayerController state, Command cmd, String[] args) {
-		if (!state.verifyCooldownForTp(TeleportReason.WARP)) {
+		if (!state.verifyCooldownForTp(TeleportReason.WARP, true)) {
 			return true;
 		}
 

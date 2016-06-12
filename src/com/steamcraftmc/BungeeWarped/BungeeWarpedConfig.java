@@ -238,7 +238,13 @@ public class BungeeWarpedConfig {
 	}
 
 	public String RequestInterrupt(String player) {
-		String message = getString("RequestInterrupt", "&6Teleport request was interrupted by someone else.");
+		String message = getString("RequestInterrupt", "&cTeleport request was interrupted by someone else.");
+		message = message.replace("{player}", player);
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String RequesteeOnCooldown(String player) {
+		String message = getString("RequesteeOnCooldown", "&cThat use is unable to teleport right now.");
 		message = message.replace("{player}", player);
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}

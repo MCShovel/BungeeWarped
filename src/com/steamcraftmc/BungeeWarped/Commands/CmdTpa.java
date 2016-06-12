@@ -15,7 +15,7 @@ public class CmdTpa extends BaseCommand {
 
 	@Override
 	protected boolean doCommand(Player player, PlayerController state, Command cmd, String[] args) {
-		if (!state.verifyCooldownForTp(TeleportReason.TPA)) {
+		if (!state.verifyCooldownForTp(TeleportReason.TPA, true)) {
 			return true;
 		}
 
