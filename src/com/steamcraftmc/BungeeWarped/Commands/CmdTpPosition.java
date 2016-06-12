@@ -42,7 +42,8 @@ public class CmdTpPosition extends BaseCommand {
 		} catch(Exception ex) {
 			player.sendMessage(ChatColor.RED + ex.getMessage());
 		}
-		
+
+		state.teleportToDestination(dest);
 		return true;
 	}
 

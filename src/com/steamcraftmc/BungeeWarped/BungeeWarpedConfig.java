@@ -74,7 +74,9 @@ public class BungeeWarpedConfig {
 	}
 
 	public boolean setSpawnOnTeleport(TeleportReason reason) {
-		return true;
+		if (reason == TeleportReason.HOME || reason == TeleportReason.PORTAL || reason == TeleportReason.WARP)
+			return true;
+		return false;
 	}
 
 	// ***********************************************************************
