@@ -13,9 +13,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.steamcraftmc.BungeeWarped.Storage.MySqlDataStore;
+import com.steamcraftmc.BungeeWarped.Tasks.BungeePlayerMessage;
 import com.steamcraftmc.BungeeWarped.Tasks.RequestServerName;
 import com.steamcraftmc.BungeeWarped.Tasks.TpaRequestHandler;
 import com.steamcraftmc.BungeeWarped.Tasks.TpaResponseHandler;
@@ -161,26 +161,9 @@ public class BungeeWarpedBukkitPlugin extends JavaPlugin implements PluginMessag
 		if (target != null) {
 			receivedPlayerMessage(target, command, arguments);
 		}
-		else {		
-			log(Level.INFO, "Sending command: " + command);
-	        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-	        
-	        out.writeUTF("ForwardToPlayer");
-	        out.writeUTF(player);
-	        out.writeUTF("BungeeWarped");
-
-	        ByteArrayDataOutput msg = ByteStreams.newDataOutput();
-	        
-	        msg.writeUTF(command);
-	        msg.writeInt(arguments.length);
-	        
-	        for(int ix = 0; ix < arguments.length; ix++) {
-	        	msg.writeUTF(arguments[ix]);
-	        }
-	        
-	        out.writeShort(msg.toByteArray().length);
-	        out.write(msg.toByteArray());
-	        sender.sendPluginMessage(this, "BungeeCord", out.toByteArray());
+		else {
+			new BungeePlayerMessage(this, sender, player, command, arguments)
+				.start();
 		}
 	}
 
