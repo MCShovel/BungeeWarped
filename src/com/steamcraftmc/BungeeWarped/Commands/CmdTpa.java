@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 
 import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
 import com.steamcraftmc.BungeeWarped.Controllers.PlayerController;
+import com.steamcraftmc.BungeeWarped.Storage.TeleportReason;
 
 public class CmdTpa extends BaseCommand {
 
@@ -14,6 +15,10 @@ public class CmdTpa extends BaseCommand {
 
 	@Override
 	protected boolean doCommand(Player player, PlayerController state, Command cmd, String[] args) {
+		if (!state.verifyCooldownForTp(TeleportReason.TPA)) {
+			return true;
+		}
+
 		plugin.sendPlayerMessage(player, args[0], "TpaRequest", 
 					new String[] { "there", player.getName() }
 			);

@@ -102,7 +102,7 @@ public class BungeeWarpedBukkitPlugin extends JavaPlugin implements PluginMessag
     
     public void registerPlayerJoined(Player player) {
     	if (this.bungeeServerName == null) {
-    		new RequestServerName(this, player).runAfter(30);
+    		new RequestServerName(this, player).runAfter(20);
     	}
     	else {
     		this.getPlayerController(player).onPlayerJoin();

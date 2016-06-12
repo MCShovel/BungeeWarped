@@ -98,7 +98,7 @@ permissions:
         description: Gives access to all admin commands
         default: op
         children:
-            bungeewarped.op.bypass: true
+            bungeewarped.op.bypass.*: true
             bungeewarped.op.portal: true
             bungeewarped.op.warp: true
             bungeewarped.op.home: true
@@ -109,25 +109,25 @@ permissions:
         description: Allows operators to bypass timeouts
         default: op
         children:
-            bungeewarped.op.bypass.homedelay: true
-            bungeewarped.op.bypass.portaldelay: true
-            bungeewarped.op.bypass.warpdelay: true
-            bungeewarped.op.bypass.tpdelay: true
-            bungeewarped.op.bypass.combatdelay: true
+            bungeewarped.op.bypass.delay.home: true
+            bungeewarped.op.bypass.delay.portal: true
+            bungeewarped.op.bypass.delay.warp: true
+            bungeewarped.op.bypass.delay.tpa: true
+            bungeewarped.op.bypass.delay.combat: true
 
-    bungeewarped.op.bypass.homedelay:
+    bungeewarped.op.bypass.delay.home:
         description: Allows operators to bypass warmup/cooldown of /home
         default: op
-    bungeewarped.op.bypass.portaldelay:
+    bungeewarped.op.bypass.delay.portal:
         description: Allows operators to bypass warmup/cooldown of portal use
         default: op
-    bungeewarped.op.bypass.warpdelay:
+    bungeewarped.op.bypass.delay.warp:
         description: Allows operators to bypass warmup/cooldown of /warp use
         default: op
-    bungeewarped.op.bypass.tpdelay:
+    bungeewarped.op.bypass.delay.tpa:
         description: Allows operators to bypass warmup/cooldown of /tpa use
         default: op
-    bungeewarped.op.bypass.combatdelay:
+    bungeewarped.op.bypass.delay.combat:
         description: Allows operators to bypass the combat delay
         default: op
 

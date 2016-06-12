@@ -20,6 +20,9 @@ public class CmdWarp extends BaseCommand {
 
 	@Override
 	protected boolean doCommand(Player player, PlayerController state, Command cmd, String[] args) {
+		if (!state.verifyCooldownForTp(TeleportReason.WARP)) {
+			return true;
+		}
 
 		if (args.length == 0) {
 			doListWarps(player);
@@ -36,10 +39,18 @@ public class CmdWarp extends BaseCommand {
 	private void doWarp(Player player, String name) {
 
 		NamedDestination dest = plugin.dataStore.findDestinationForPlayer(player, name);
-		if (dest != null) {
-			dest.reason = TeleportReason.WARP;
-			plugin.getPlayerController(player).teleportToDestination(dest);
-		}
+
+        if (dest == null || dest.name == null) {
+        	player.sendMessage(ChatColor.RED + "The destination does not exist.");
+        	return;
+        }
+        else if(!player.hasPermission("bungeewarped.warp.location.*") && !player.hasPermission("bungeewarped.warp.location." + dest.name.toLowerCase())) {
+    	    player.sendMessage(plugin.config.NoPortalAccess(dest.name));
+            return;
+        }
+
+		dest.reason = TeleportReason.WARP;
+		plugin.getPlayerController(player).teleportToDestination(dest);
 	}
 
 	private void doListWarps(Player player) {

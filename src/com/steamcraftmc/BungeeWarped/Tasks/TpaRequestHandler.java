@@ -37,13 +37,16 @@ public class TpaRequestHandler implements Runnable, PendingTpaRequest {
 						new String[] { player.getName(), PendingRequestState.FORCED.toString(), dest.toString() }
 				);
 		}
+		else if (!plugin.getPlayerController(player).verifyCooldownForTp(TeleportReason.TPA)) {
+			Complete(player, plugin.getPlayerController(player), PendingRequestState.CANCEL);
+		}
 		else if (plugin.getPlayerController(player).setPendingRequest(this)) {
 			player.sendMessage(
 					directionHere 
 					? plugin.config.TpaRequest(fromPlayer) 
 					: plugin.config.TpaHereRequest(fromPlayer)
 			);
-			taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, this, 120000);
+			taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, this, 2400);
 		}
 	}
 	

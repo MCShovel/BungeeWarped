@@ -27,7 +27,7 @@ public class RequestServerName implements Runnable {
         player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
 	}
 	
-	public void runAfter(int milliseconds) {
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, this, milliseconds);
+	public void runAfter(int serverTicks) {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, this, serverTicks);
 	}
 }

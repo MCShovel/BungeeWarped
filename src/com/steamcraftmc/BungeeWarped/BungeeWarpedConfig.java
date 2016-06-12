@@ -79,6 +79,32 @@ public class BungeeWarpedConfig {
 		return false;
 	}
 
+	public int getTpWarmupTime(TeleportReason reason) {
+		if (reason == TeleportReason.PORTAL) {
+			return 5;
+		}
+		return 15;
+	}
+	
+	public int getTpCooldownTime(TeleportReason reason) {
+		return 60;
+	}
+
+	public int getCombatDelay(TeleportReason reason) {
+		return 60;
+	}
+	
+	public int getTpMovementAllowed(TeleportReason reason) {
+		if (reason == TeleportReason.PORTAL) {
+			return 0;
+		}
+		return 1;
+	}
+	
+	public boolean getTpEffects(TeleportReason reason) {
+		return true;
+	}
+	
 	// ***********************************************************************
 	// MySql Options:
 	// ***********************************************************************
@@ -214,6 +240,34 @@ public class BungeeWarpedConfig {
 	public String RequestInterrupt(String player) {
 		String message = getString("RequestInterrupt", "&6Teleport request was interrupted by someone else.");
 		message = message.replace("{player}", player);
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String TeleportingAfterDelay(int delay) {
+		String message = getString("TeleportingAfterDelay", "&8Teleporting in {delay} seconds...");
+		message = message.replace("{delay}", String.valueOf(delay));
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String TeleportCancelled() {
+		String message = getString("TeleportCancelled", "&6Teleport cancelled.");
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String Teleporting() {
+		String message = getString("Teleporting", "&6Teleporting...");
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String TeleportCancelledCombat(int delay) {
+		String message = getString("TeleportCancelledCombat", "&cYou have been in combat, wait {delay} seconds.");
+		message = message.replace("{delay}", String.valueOf(delay));
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String TeleportCancelledCooldown(int delay) {
+		String message = getString("TeleportCancelledCooldown", "&cPlease wait {delay} seconds before teleporting again.");
+		message = message.replace("{delay}", String.valueOf(delay));
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 }

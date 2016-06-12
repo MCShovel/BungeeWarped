@@ -329,7 +329,8 @@ public class MySqlDataStore {
 		List<NamedDestination> all = new ArrayList<NamedDestination>();
 	    try {
 		    ResultSet result = this.database.select(
-		    		"SELECT `bw_name`, `bw_serverName`, `bw_worldName`, `bw_posX`, `bw_posY`, `bw_posZ`, `bw_pitch`, `bw_yaw` FROM `" + tablePrefix + "homes`;");
+		    		"SELECT `bw_name`, `bw_serverName`, `bw_worldName`, `bw_posX`, `bw_posY`, `bw_posZ`, `bw_pitch`, `bw_yaw` FROM `" + tablePrefix + "homes`" +
+		    		"WHERE `bw_playerUUID` = '" + playerUuid + "';");
 
 			try {
 				while (result.next()) {

@@ -14,6 +14,7 @@ import com.steamcraftmc.BungeeWarped.Storage.NamedDestination;
 import com.steamcraftmc.BungeeWarped.Storage.TeleportReason;
 import com.steamcraftmc.BungeeWarped.Tasks.PendingRequestState;
 import com.steamcraftmc.BungeeWarped.Tasks.PendingTpaRequest;
+import com.steamcraftmc.BungeeWarped.Tasks.PlayerTeleportDelay;
 
 public class PlayerController {
     private final BungeeWarpedBukkitPlugin plugin;
@@ -23,6 +24,7 @@ public class PlayerController {
 
 	public long joinTime;
 	public long lastCombat;
+	public long lastTpTime;
 	
 	public boolean isInsidePortal;
 	public long portalEnterTime;
@@ -54,6 +56,10 @@ public class PlayerController {
 		completePendingRequest(PendingRequestState.LOGOUT);
 	}
 
+	public void onCombatTag() {
+		this.lastCombat = System.currentTimeMillis();
+	}
+	
 	public void stepIntoPortal(boolean isInPortal, String destination) {
 		if (!this.isInsidePortal && isInPortal) {
 			this.portalEnterTime = System.currentTimeMillis();
@@ -72,7 +78,7 @@ public class PlayerController {
 		}
 	}
 
-	public void teleportToLocation(NamedDestination dest) {
+	private void teleportToLocation(NamedDestination dest) {
 		Location loc = dest.toPlayerLocation();
 		if (plugin.config.setSpawnOnTeleport(dest.reason)) {
 			player.setBedSpawnLocation(loc, true);
@@ -82,12 +88,7 @@ public class PlayerController {
 
     public void teleportToDestinationName(String destName, TeleportReason reason) {
     	NamedDestination dest = plugin.dataStore.getDestination(destName);
-    	dest.reason = reason;
-    	teleportToDestination(dest);
-    }
 
-	public void teleportToDestination(NamedDestination dest) {
-	
         if (dest == null || dest.name == null) {
         	player.sendMessage(ChatColor.RED + "The destination does not exist.");
         	return;
@@ -97,6 +98,25 @@ public class PlayerController {
             return;
         }
 
+    	dest.reason = reason;
+    	teleportToDestination(dest);
+    }
+
+	public void teleportToDestination(NamedDestination dest) {
+		if (dest.reason == TeleportReason.HOME || dest.reason == TeleportReason.PORTAL 
+			|| dest.reason == TeleportReason.WARP || dest.reason == TeleportReason.TPA) {
+			new PlayerTeleportDelay(plugin, this, dest).start();
+		}
+		else {
+			teleportToDestinationNow(dest);
+		}
+	}
+	
+
+	public void teleportToDestinationNow(NamedDestination dest) {
+	
+		this.lastTpTime = System.currentTimeMillis();
+		player.sendMessage(plugin.config.Teleporting());
         if (dest.serverName == null || dest.serverName.equalsIgnoreCase(plugin.getServerName())) {
         	teleportToLocation(dest);
         	return;
@@ -147,5 +167,50 @@ public class PlayerController {
 			pendingRequest = req;
 			return true;
 		}
+	}
+	
+	private int checkCombatDelay(int combatDelay) {
+
+		long now = System.currentTimeMillis();
+		long diff = now - (lastCombat + (combatDelay * 1000));
+		diff /= 1000;
+		return diff > 0 ? Math.abs((int)diff) : 0;
+	}
+
+	private int checkCooldownTime(int cooldown) {
+		long now = System.currentTimeMillis();
+		long diff = now - (lastTpTime + (cooldown * 1000));
+		diff /= 1000;
+		return diff > 0 ? Math.abs((int)diff) : 0;
+	}
+	
+	public boolean verifyCooldownForTp(TeleportReason reason) {
+		int cooldown = plugin.config.getTpCooldownTime(reason);
+		int combatDelay = plugin.config.getCombatDelay(reason);
+
+		if (player.hasPermission("bungeewarped.op.bypass.*") 
+			|| player.hasPermission("bungeewarped.op.bypass.delay." + reason.toString().toLowerCase())) {
+			cooldown = 0;
+		}
+		if (player.hasPermission("bungeewarped.op.bypass.*") || player.hasPermission("bungeewarped.op.bypass.delay.combat")) {
+			combatDelay = 0;
+		}
+		
+		if (combatDelay > 0) {
+			int waitTime = checkCombatDelay(combatDelay);
+			if (waitTime > 0) {
+				player.sendMessage(plugin.config.TeleportCancelledCombat(waitTime));
+				return false;
+			}
+		}
+		if (cooldown > 0) {
+			int waitTime = checkCooldownTime(cooldown);
+			if (waitTime > 0) {
+				player.sendMessage(plugin.config.TeleportCancelledCooldown(waitTime));
+				return false;
+			}
+		}
+		
+		return true;
 	}
 }
