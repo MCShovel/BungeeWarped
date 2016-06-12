@@ -51,6 +51,8 @@ public class BungeeWarpedBukkitPlugin extends JavaPlugin implements PluginMessag
         log(Level.INFO, "Plugin channel registered!");
 
         reload();
+        new com.steamcraftmc.BungeeWarped.Commands.CmdTpPosition(this);
+        new com.steamcraftmc.BungeeWarped.Commands.CmdTpOverride(this);
         
         new com.steamcraftmc.BungeeWarped.Commands.CmdPortal(this);
         new com.steamcraftmc.BungeeWarped.Commands.CmdWarp(this);
@@ -119,7 +121,7 @@ public class BungeeWarpedBukkitPlugin extends JavaPlugin implements PluginMessag
 			String name = in.readUTF();
 			if (name != null) {
 				this.bungeeServerName = name;
-				log(Level.INFO, "Received bungee server name: " + name);
+				log(Level.FINER, "Received bungee server name: " + name);
 	    		this.getPlayerController(player).onPlayerJoin();
 			}
 		} else if (subchannel.equals("BungeeWarped")) {
@@ -141,7 +143,7 @@ public class BungeeWarpedBukkitPlugin extends JavaPlugin implements PluginMessag
 	}
 
 	private void receivedPlayerMessage(Player player, String cmd, String[] args) {
-		log(Level.INFO, "Received player command: " + cmd);
+		log(Level.FINER, "Received player command: " + cmd);
 		if (cmd.equals("TpaRequest")) {
 			new TpaRequestHandler(this, player, args)
 				.start();

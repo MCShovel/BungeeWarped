@@ -4,6 +4,7 @@ public enum TeleportReason {
 	PORTAL,
 	WARP,
 	HOME,
+	TPA, 
 	TPO,
-	TPA
+	TPPOS
 }

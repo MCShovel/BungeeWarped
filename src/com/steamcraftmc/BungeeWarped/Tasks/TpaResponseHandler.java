@@ -19,10 +19,9 @@ public class TpaResponseHandler implements Runnable {
 		this.plugin = plugin;
 		this.player = player;
 		this.fromPlayer = args[0];
-		//this.fromPlayerUuid = args[1];
-		this.response = PendingRequestState.valueOf(args[2]);
-		if (args.length > 3) {
-			this.destination = NamedDestination.fromString(args[3]);
+		this.response = PendingRequestState.valueOf(args[1]);
+		if (args.length > 2) {
+			this.destination = NamedDestination.fromString(args[2]);
 		}
 	}
 
@@ -55,6 +54,12 @@ public class TpaResponseHandler implements Runnable {
 				break;
 			case REPLACED:
 				player.sendMessage(plugin.config.RequestInterrupt(fromPlayer));
+				break;
+			case FORCED:
+				if (destination != null) {
+					destination.reason = TeleportReason.TPO;
+					plugin.getPlayerController(player).teleportToDestination(destination);
+				}
 				break;
 			case PENDING:
 			default:

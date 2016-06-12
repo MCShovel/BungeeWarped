@@ -51,8 +51,13 @@ commands:
         permission-message: '§4You do not have permission to perform this action.'
     tpo:
         description: 'Force teleport a player.'
-        usage: 'Usage: /<command> [player]'
-        permission: bungeewarped.op.tp
+        usage: 'Usage: /<command> player [player]'
+        permission: bungeewarped.op.tpo
+        permission-message: '§4You do not have permission to perform this action.'
+    tppos:
+        description: 'Force teleport to a specific location.'
+        usage: 'Usage: /<command> x y z [yaw] [pitch] [world] [server]'
+        permission: bungeewarped.op.tppos
         permission-message: '§4You do not have permission to perform this action.'
     tpa:
         aliases: [call, tpask]
@@ -97,7 +102,8 @@ permissions:
             bungeewarped.op.portal: true
             bungeewarped.op.warp: true
             bungeewarped.op.home: true
-            bungeewarped.op.tp: true
+            bungeewarped.op.tpo: true
+            bungeewarped.op.tppos: true
 
     bungeewarped.op.bypass.*:
         description: Allows operators to bypass timeouts
@@ -129,8 +135,12 @@ permissions:
         description: 'Access to list, tp, move, or delete other player homes.'
         default: op
 
-    bungeewarped.op.tp:
+    bungeewarped.op.tpo:
         description: 'Access to /tpo to force teleport players.'
+        default: op
+
+    bungeewarped.op.tppos:
+        description: 'Access to /tppos to teleport to a locatoin.'
         default: op
 
 #Portal Related perms

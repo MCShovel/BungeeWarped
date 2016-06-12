@@ -7,5 +7,6 @@ public enum PendingRequestState {
 	DENY,
 	TIMEOUT,
 	REPLACED,
-	LOGOUT
+	LOGOUT, 
+	FORCED
 }

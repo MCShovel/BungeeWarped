@@ -18,7 +18,7 @@ public class CmdTpaHere extends BaseCommand {
 	protected boolean doCommand(Player player, PlayerController state, Command cmd, String[] args) {
 		NamedDestination dest = NamedDestination.create(plugin, player.getName(), player.getLocation(), TeleportReason.TPA);
 		plugin.sendPlayerMessage(player, args[0], "TpaRequest", 
-					new String[] { "here", player.getName(), player.getUniqueId().toString(), dest.toString() }
+					new String[] { "here", player.getName(), dest.toString() }
 			);
 		return true;
 	}

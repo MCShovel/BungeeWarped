@@ -15,7 +15,7 @@ public class CmdTpa extends BaseCommand {
 	@Override
 	protected boolean doCommand(Player player, PlayerController state, Command cmd, String[] args) {
 		plugin.sendPlayerMessage(player, args[0], "TpaRequest", 
-					new String[] { "there", player.getName(), player.getUniqueId().toString() }
+					new String[] { "there", player.getName() }
 			);
 		return true;
 	}
