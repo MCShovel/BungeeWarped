@@ -15,13 +15,13 @@ commands:
         permission-message: '§4You do not have permission to perform this action.'
     warp:
         aliases: [warps]
-        description: 'Teleports you to a warp by name, or lists the warps available.'
+        description: 'Teleport to a warp by name, or lists the warps.'
         usage: 'Usage: /<command> [name]'
         permission: bungeewarped.warp
         permission-message: '§4You do not have permission to perform this action.'
     setwarp:
         aliases: [createwarp]
-        description: 'Creates or replaces a named warp at your current position.'
+        description: 'Creates a named warp at your current location.'
         usage: 'Usage: /<command> name'
         permission: bungeewarped.setwarp
         permission-message: '§4You do not have permission to perform this action.'
@@ -39,13 +39,13 @@ commands:
         permission-message: '§4You do not have permission to perform this action.'
     sethome:
         aliases: [createhome]
-        description: 'Set your home and world bedspawn to your current position.'
+        description: 'Set a home to your current position.'
         usage: 'Usage: /<command> [name]'
         permission: bungeewarped.home
         permission-message: '§4You do not have permission to perform this action.'
     delhome:
         aliases: [remhome, rmhome]
-        description: 'Set your home and world bedspawn to your current position.'
+        description: 'Remove your home by name.'
         usage: 'Usage: /<command> [name]'
         permission: bungeewarped.home
         permission-message: '§4You do not have permission to perform this action.'
