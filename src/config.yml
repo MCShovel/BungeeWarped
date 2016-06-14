@@ -1,7 +1,144 @@
-# BungeePortals configuration file, visit www.spigotmc.org/resources/bungeeportals.19 for help.
+# BungeeWarped configuration file, visit https://github.com/MCShovel/BungeeWarped/wiki
 
+options:
+#Enable cross-server teleports via bungeecord
+  enableBungeeCord: true
+
+#MySQL Settings --- REQUIRED ---
+#Stores warp and home locations as well as cross-server teleports
+mysql:
+  host: localhost
+  port: 3306
+  username: root
+  password: password
+  database: bungeewarped
+  tablePrefix: 'bwarped_'
+
+#Which commands, if any, set the player's bedspawn on use
+setspawn:
+  tpa: false
+  warp: true
+  home: true
+  portal: true
+
+#Controls the user-delay before teleportation occurs
+warmup:
+  tpa: 15
+  tpo: 0
+  tppos: 0
+  warp: 5
+  home: 15
+  portal: 5
+# Affects the player with CONFUSION while waiting for teleports.
+  effects: true
+
+#How many blocks away can a person move before cancelling the teleport,
+#Use -1 to disable feature
+movement:
+  tpa: 1
+  tpo: -1
+  tppos: -1
+  warp: 1
+  home: 1
+  portal: 0
+
+#How many seconds a person is invulnerable to all types of damage after
+#being teleported.
+invulnerability:
+  tpa: 0
+  tpo: 0
+  tppos: 0
+  warp: 10
+  home: 10
+  portal: 10
+# protect fresh-spawns after joining the server... possible abuse, swim
+# in lava, log out/in, swim 10 seconds, log out/in, swim 10 seconds, etc...
+  join: 10
+
+#Controls how much time must past since the last teleportation
+#before these commands are usable again.
+cooldown:
+  tpa: 60
+  tpo: 0
+  tppos: 0
+  warp: 60
+  home: 60
+  portal: 5
+# If the player has hit or been hit in PvP combat, apply this delay
+# to all forms of teleportation
+  combat: 60
+
+#Prevent specific commands being used by people without the bungeewarped.bypass.blacklist
+#permission.
+blacklist:
+  commands:
+#   For commands, format is blacklist.commands.{world-name}.{command-name} where a value
+#   of true will prevent it's use within that world.
+    world_nether:
+      sethome: true
+    the_end:
+      sethome: true
+  tpa:
+#   For tpa/tpahere, format is blacklist.tpa.{world-from}.{world-to} where a value
+#   of true will prevent it's use. Use an asterisks 'any' to apply to all worlds.
+#   ex 1: Dissallow tpa/tpahere out of the Nether
+    world_nether:
+      any: true
+#   ex 2: Dissallow tpa/tpahere into The End
+    any:
+      the_end: true
 
 translation:
-  AccessDenied: '&4You do not have permission to perform this action.'
-  NoPortalPermissionMessage: '&cYou do not have permission to go to that location.'
-
+  BungeeCordError: '&cBungeeCord has not responded, check your configuration.'
+  PermissionDenied: '&4You do not have permission to use that command.'
+  NotAllowedHere: '&cYou can not perform this action here.'
+  NotAllowedCrossWorld: '&cYou can not teleport to that world from here.'
+  ConfigReloaded: '&6All configuration files and data have been reloaded.'
+  WorldEditMissing: '&cUnable to locate WorldEdit plugin.'
+  WorldEditNoSel: '&cPlease make a WorldEdit selection.'
+  EmptySelection: '&cThe selection is currently empty.'
+  SelectionTooLarge: '&cThe selected area of {blocks} blocks is too large.'
+  PortalCreated: '&6Portal created to {name} ({size} blocks).'
+  PortalRemoved: '&6Removed {size} portal blocks).'
+  NoPortalAccess: '&cYou do not have access to use that.'
+  NoPlayerHomes: '&cYou do not have a home set.'
+  NoHomeFoundByName: '&6Home &c{name} &6was not found.'
+  HomeSetConfirm: '&6Home &c{name}&6 created.'
+  HomeDelConfirm: '&6Home &c{name}&6 removed.'
+  HomesList: '&6Homes&f: {list}'
+  NoMoreHomesAllowed: '&cYou have too many homes set, use /delhome to remove some.'
+  WarpFullName: '&6Use the full warp name &c{name}&6.'
+  WarpNotFound: '&6Warp &c{name} &6was not found.'
+  WarpSetConfirm: '&6Warp &c{name}&6 created.'
+  WarpDelConfirm: '&6Warp &c{name}&6 removed.'
+  WarpsList: '&6Warps&f: {list}'
+  TpaTimeoutExpired: '&6The request has timed out.'
+  TpaRequest:
+    - "&c{player}&6 has requested to teleport to you."
+    - "To teleport, type &2/tpaccept&6."
+    - "To deny this request, type &c/tpdeny&6."
+    - "This request will timeout after &c120 seconds&6."
+  TpaHereRequest:
+    - "&c{player}&6 has requested you to teleport to them."
+    - "To teleport, type &2/tpaccept&6."
+    - "To deny this request, type &c/tpdeny&6."
+    - "This request will timeout after &c120 seconds&6."
+  NoPendingRequest: '&cYou do not have a pending request.'
+  TeleportAccepted: '&6Teleport request accepted.'
+  TeleportDenied: '&6Teleport request denied.'
+  TpRequestIgnore: '&6Now ignoring teleport requests.'
+  TpRequestUnignore: '&6Now accepting teleport requests.'
+  RequestAccepted: '&c{player} &6has accepted your request.'
+  RequestCancelled: '&6Teleport request cancelled.'
+  RequestDenied: '&c{player} &6has denied your request.'
+  RequestTargetLogout: '&c{player} &6has logged out.'
+  RequestTimeout: '&6Teleport request timed out.'
+  RequestInterrupt: '&cTeleport request was interrupted by someone else.'
+  RequesteeOnCooldown: '&cThat user is unable to teleport right now.'
+  RequesteeCanNotTp: '&cThat user is not allowed to teleport.'
+  PlayerNotFound: '&cPlayer not found.'
+  TeleportingAfterDelay: '&8Teleporting in {delay} seconds...'
+  TeleportCancelled: '&6Teleport cancelled.'
+  Teleporting: '&6Teleporting...'
+  TeleportCancelledCombat: '&cYou have been in combat, wait {delay} seconds.'
+  TeleportCancelledCooldown: '&cPlease wait {delay} seconds before teleporting again.'

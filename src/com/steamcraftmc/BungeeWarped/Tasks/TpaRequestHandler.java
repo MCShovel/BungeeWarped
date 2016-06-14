@@ -40,6 +40,9 @@ public class TpaRequestHandler implements Runnable, PendingTpaRequest {
 		else if (!player.hasPermission("bungeewarped.tpaccept")) {
 			Complete(player, plugin.getPlayerController(player), PendingRequestState.NOTALLOWED);
 		}
+		else if (destination != null && !plugin.getPlayerController(player).canTeleportToWorld(destination)) {
+			Complete(player, plugin.getPlayerController(player), PendingRequestState.NOTALLOWED);
+		}
 		else if (!plugin.getPlayerController(player).verifyCooldownForTp(TeleportReason.TPA, false)) {
 			Complete(player, plugin.getPlayerController(player), PendingRequestState.TPCOOLDOWN);
 		}

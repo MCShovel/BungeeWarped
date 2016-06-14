@@ -23,12 +23,11 @@ public class PlayerController {
     public final String playerUuid;
 
 	public long joinTime;
-	public long lastCombat;
 	public long lastTpTime;
+	public long lastCombat;
+	public long invulnerableUntil;
 	
 	public boolean isInsidePortal;
-	public long portalEnterTime;
-	public String portalDestination;
 	
 	private PendingTpaRequest pendingRequest;
 	public boolean ignoreRequests;
@@ -41,7 +40,8 @@ public class PlayerController {
 	}
 
 	public void onPlayerJoin() {
-		joinTime = System.currentTimeMillis();
+		lastTpTime = joinTime = System.currentTimeMillis();
+		invulnerableUntil = lastTpTime + (plugin.config.invulnerabilityOnJoin() * 1000);
 		isInsidePortal = true;
 		pendingRequest = null;
 		
@@ -60,9 +60,12 @@ public class PlayerController {
 		this.lastCombat = System.currentTimeMillis();
 	}
 	
+	public boolean canDamagePlayer() {
+		return invulnerableUntil < System.currentTimeMillis();
+	}
+	
 	public void stepIntoPortal(boolean isInPortal, String destination) {
 		if (!this.isInsidePortal && isInPortal) {
-			this.portalEnterTime = System.currentTimeMillis();
 			this.isInsidePortal = true;
 
 			if (!player.hasPermission("bungeewarped.location.*")
@@ -85,6 +88,8 @@ public class PlayerController {
 		if (plugin.config.setSpawnOnTeleport(dest.reason)) {
 			player.setBedSpawnLocation(loc, true);
 		}
+		this.lastTpTime = System.currentTimeMillis();
+		invulnerableUntil = lastTpTime + (plugin.config.invulnerabilityTime(dest.reason) * 1000);
 	    player.teleport(loc, TeleportCause.PLUGIN);
 	}
 
@@ -107,6 +112,12 @@ public class PlayerController {
 	public void teleportToDestination(NamedDestination dest) {
 		if (dest.reason == TeleportReason.HOME || dest.reason == TeleportReason.PORTAL 
 			|| dest.reason == TeleportReason.WARP || dest.reason == TeleportReason.TPA) {
+			
+			if (dest.reason == TeleportReason.TPA && !canTeleportToWorld(dest)) {
+				player.sendMessage(plugin.config.NotAllowedCrossWorld(player.getWorld().getName(), dest.worldName));
+				return;
+			}
+			
 			new PlayerTeleportDelay(plugin, this, dest).start();
 		}
 		else {
@@ -216,6 +227,21 @@ public class PlayerController {
 			}
 		}
 		
+		return true;
+	}
+
+	public boolean canTeleportToWorld(NamedDestination destination) {
+		if (player.hasPermission("bungeewarped.bypass.*") || player.hasPermission("bungeewarped.bypass.blacklist")) {
+			return true;
+		}
+
+		String myWorld = player.getWorld().getName().toLowerCase();
+		boolean disallow = plugin.config.getTpaBlacklisted("any", "any", false);
+		disallow = plugin.config.getTpaBlacklisted("any", destination.worldName, disallow)
+				&& plugin.config.getTpaBlacklisted(myWorld, "any", disallow);
+		if (plugin.config.getTpaBlacklisted(myWorld, destination.worldName, disallow)) {
+			return false;
+		}
 		return true;
 	}
 }

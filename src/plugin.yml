@@ -106,6 +106,8 @@ permissions:
         description: Allows users to bypass warmup/cooldown of /tpa use
     bungeewarped.bypass.combat:
         description: Allows users to bypass the combat cooldown
+    bungeewarped.bypass.blacklist:
+        description: Allows users to bypass the command blacklist
 
 #Portal Related perms
     bungeewarped.portal:

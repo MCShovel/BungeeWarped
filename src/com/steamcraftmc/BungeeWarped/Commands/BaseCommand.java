@@ -47,6 +47,11 @@ public abstract class BaseCommand implements CommandExecutor {
 			return true;
 		}
 
+		if (!sender.hasPermission("bungeewarped.bypass.blacklist") && plugin.config.getCommandIsBlacklisted(player.getWorld().getName(), cmdName)) {
+            sender.sendMessage(plugin.config.NotAllowedHere(cmdName));
+            return true;
+		}
+		
         PlayerController state = this.plugin.getPlayerController(player);
         if (player != null && state != null) {
         	return doCommand(player, state, cmd, args);
