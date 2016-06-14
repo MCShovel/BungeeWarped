@@ -291,6 +291,12 @@ public class BungeeWarpedConfig {
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 	
+	public String TpaRequestSent(String player) {
+		String message = getText("TpaRequestSent", "&6Request sent to &c{player}&6.");
+		message = message.replace("{player}", player);
+		return ChatColor.translateAlternateColorCodes('&', message);		
+	}
+	
 	public String TpaRequest(String player) {
 		String message = getText("TpaRequest", 
 				"&c{player}&6 has requested to teleport to you.\n" +

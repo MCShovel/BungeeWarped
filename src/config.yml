@@ -113,6 +113,7 @@ translation:
   WarpDelConfirm: '&6Warp &c{name}&6 removed.'
   WarpsList: '&6Warps&f: {list}'
   TpaTimeoutExpired: '&6The request has timed out.'
+  TpaRequestSent: '&6Request sent to &c{player}&6.'
   TpaRequest:
     - "&c{player}&6 has requested to teleport to you."
     - "To teleport, type &2/tpaccept&6."

@@ -18,10 +18,11 @@ public class CmdTpa extends BaseCommand {
 		if (!state.verifyCooldownForTp(TeleportReason.TPA, true)) {
 			return true;
 		}
-
+		
 		plugin.sendPlayerMessage(player, args[0], "TpaRequest", 
 					new String[] { "there", player.getName() }
 			);
+		
 		return true;
 	}
 

@@ -49,8 +49,8 @@ public class TpaRequestHandler implements Runnable, PendingTpaRequest {
 		else if (plugin.getPlayerController(player).setPendingRequest(this)) {
 			player.sendMessage(
 					directionHere 
-					? plugin.config.TpaRequest(fromPlayer) 
-					: plugin.config.TpaHereRequest(fromPlayer)
+					? plugin.config.TpaHereRequest(fromPlayer) 
+					: plugin.config.TpaRequest(fromPlayer)
 			);
 			taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, this, 2400);
 		}

@@ -167,6 +167,8 @@ public class BungeeWarpedBukkitPlugin extends JavaPlugin implements PluginMessag
 		
 		Player target = Bukkit.getServer().getPlayerExact(player);
 		if (target != null) {
+			if (command == "TpaRequest")
+				sender.sendMessage(config.TpaRequestSent(target.getName()));
 			receivedPlayerMessage(target, command, arguments);
 		}
 		else {

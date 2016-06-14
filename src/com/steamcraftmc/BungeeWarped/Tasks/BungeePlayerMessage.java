@@ -88,6 +88,8 @@ public class BungeePlayerMessage implements Runnable, PluginMessageListener {
 				target = possible.get(0);
 			}
 
+			if (command == "TpaRequest")
+				sender.sendMessage(plugin.config.TpaRequestSent(target));
 			send();
 		}
 	}
