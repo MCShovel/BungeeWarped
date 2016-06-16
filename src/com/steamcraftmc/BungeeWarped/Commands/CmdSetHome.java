@@ -35,7 +35,7 @@ public class CmdSetHome extends BaseCommand {
 			}
 		}
 
-		int needed = existing.size() - (replace ? 1 : 0);
+		int needed = 1 + existing.size() - (replace ? 1 : 0);
 		if (needed > 1) {
 			if (!player.hasPermission("bungeewarped.home.multi." + String.valueOf(needed)) && 
 					!player.hasPermission("bungeewarped.home.unlimited")) {
