@@ -68,8 +68,8 @@ public class PlayerController {
 		if (!this.isInsidePortal && isInPortal) {
 			this.isInsidePortal = true;
 
-			if (!player.hasPermission("bungeewarped.location.*")
-			    && !player.hasPermission("bungeewarped.location." + destination.toLowerCase())) {
+			if (!player.hasPermission("bungeewarped.portals.*")
+			    && !player.hasPermission("bungeewarped.portals." + destination.toLowerCase())) {
 	    	    player.sendMessage(plugin.config.NoPortalAccess(destination));
 	    	    return;
 			}
@@ -93,14 +93,27 @@ public class PlayerController {
 	    player.teleport(loc, TeleportCause.PLUGIN);
 	}
 
-    public void teleportToDestinationName(String destName, TeleportReason reason) {
+	public void teleportToDestinationName(String destName, TeleportReason reason) {
     	NamedDestination dest = plugin.dataStore.getDestination(destName);
 
         if (dest == null || dest.name == null) {
         	player.sendMessage(ChatColor.RED + "The destination does not exist.");
         	return;
         }
-        else if(!player.hasPermission("bungeewarped.location.*") && !player.hasPermission("bungeewarped.location." + dest.name.toLowerCase())) {
+        
+    	if(reason == TeleportReason.PORTAL) {
+        	if (!player.hasPermission("bungeewarped.portals.*") && !player.hasPermission("bungeewarped.portals." + dest.name.toLowerCase())) {
+	    	    player.sendMessage(plugin.config.NoPortalAccess(dest.name));
+	            return;
+        	}
+        }
+        else if(reason == TeleportReason.WARP) { 
+        	if (!player.hasPermission("bungeewarped.warps.*") && !player.hasPermission("bungeewarped.warps." + dest.name.toLowerCase())) {
+	    	    player.sendMessage(plugin.config.NoPortalAccess(dest.name));
+	            return;
+        	}
+        }
+        else {
     	    player.sendMessage(plugin.config.NoPortalAccess(dest.name));
             return;
         }

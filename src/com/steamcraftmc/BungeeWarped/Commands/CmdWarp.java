@@ -37,13 +37,13 @@ public class CmdWarp extends BaseCommand {
 
 	private void doWarp(Player player, String name) {
 
-		NamedDestination dest = plugin.dataStore.findDestinationForPlayer(player, name);
+		NamedDestination dest = plugin.dataStore.findWarpForPlayerByName(player, name);
 
         if (dest == null || dest.name == null) {
         	player.sendMessage(plugin.config.WarpNotFound(name));
         	return;
         }
-        else if(!player.hasPermission("bungeewarped.location.*") && !player.hasPermission("bungeewarped.location." + dest.name.toLowerCase())) {
+        else if(!player.hasPermission("bungeewarped.warps.*") && !player.hasPermission("bungeewarped.warps." + dest.name.toLowerCase())) {
     	    player.sendMessage(plugin.config.NoPortalAccess(dest.name));
             return;
         }
@@ -59,7 +59,7 @@ public class CmdWarp extends BaseCommand {
 		for(Iterator<NamedDestination> i = possible.iterator(); i.hasNext(); ) {
 			NamedDestination dest = i.next();
 
-	        if (player.hasPermission("bungeewarped.location.*") || player.hasPermission("bungeewarped.location." + dest.name.toLowerCase())) {
+	        if (player.hasPermission("bungeewarped.warps.*") || player.hasPermission("bungeewarped.warps." + dest.name.toLowerCase())) {
 	        	if (sb.length() > 0) {
 	        		sb.append(", ");
 	        	}

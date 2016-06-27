@@ -118,6 +118,10 @@ permissions:
         description: 'Allows users to teleport with vanilla portals'
         default: true
 
+    bungeewarped.portals.*:
+        description: 'Access to all portal locations.'
+        default: true
+
 #Warp location perms
     bungeewarped.warp:
         description: 'Access to the /warp command.'
@@ -127,7 +131,7 @@ permissions:
         description: 'Access to create/move warps.'
         default: false
 
-    bungeewarped.location.*:
+    bungeewarped.warps.*:
         description: 'Access to all warp/portal locations.'
         default: true
 

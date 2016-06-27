@@ -26,7 +26,7 @@ public class CmdDelWarp extends BaseCommand {
 
 	private void deleteWarp(Player player, String name) {
 
-		NamedDestination dest = plugin.dataStore.findDestinationForPlayer(player, name);
+		NamedDestination dest = plugin.dataStore.findWarpForPlayerByName(player, name);
 		if (dest != null) {
 			if (dest.name.equalsIgnoreCase(name)) {
 				plugin.dataStore.deleteDestination(player, dest.name);

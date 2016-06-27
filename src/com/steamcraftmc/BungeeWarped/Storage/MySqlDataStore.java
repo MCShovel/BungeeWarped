@@ -227,13 +227,13 @@ public class MySqlDataStore {
     			);
 	}
 
-	public NamedDestination findDestinationForPlayer(Player player, String name) {
+	public NamedDestination findWarpForPlayerByName(Player player, String name) {
 		NamedDestination dest = findDestination(name);
         if (dest == null) {
         	player.sendMessage(plugin.config.WarpNotFound(name));
             return null;
         }
-        if (!player.hasPermission("bungeewarped.location.*") && !player.hasPermission("bungeewarped.location." + dest.name.toLowerCase())) {
+        if (!player.hasPermission("bungeewarped.warps.*") && !player.hasPermission("bungeewarped.warps." + dest.name.toLowerCase())) {
         	player.sendMessage(plugin.config.NoPortalAccess(dest.name));
             return null;
         }
