@@ -6,5 +6,7 @@ public enum TeleportReason {
 	HOME,
 	TPA, 
 	TPO,
-	TPPOS
+	TPPOS,
+	BACK,
+	TOP
 }

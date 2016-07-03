@@ -123,8 +123,7 @@ public class PlayerController {
     }
 
 	public void teleportToDestination(NamedDestination dest) {
-		if (dest.reason == TeleportReason.HOME || dest.reason == TeleportReason.PORTAL 
-			|| dest.reason == TeleportReason.WARP || dest.reason == TeleportReason.TPA) {
+		if (dest.reason != TeleportReason.TPO && dest.reason != TeleportReason.TPPOS) {
 			
 			if (dest.reason == TeleportReason.TPA && !canTeleportToWorld(dest)) {
 				player.sendMessage(plugin.config.NotAllowedCrossWorld(player.getWorld().getName(), dest.worldName));

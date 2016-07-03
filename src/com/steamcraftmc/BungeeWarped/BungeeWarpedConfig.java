@@ -425,4 +425,9 @@ public class BungeeWarpedConfig {
 		message = message.replace("{delay}", String.valueOf(delay));
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
+
+	public String NoValidTop() {
+		String message = getText("NoValidTop", "&cThere is nowhere above you.");
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
 }

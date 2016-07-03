@@ -16,6 +16,8 @@ mysql:
 
 #Which commands, if any, set the player's bedspawn on use
 setspawn:
+  back: false
+  top: false
   tpa: false
   warp: true
   home: true
@@ -23,6 +25,8 @@ setspawn:
 
 #Controls the user-delay before teleportation occurs
 warmup:
+  back: 15
+  top: 15
   tpa: 15
   tpo: 0
   tppos: 0
@@ -35,6 +39,8 @@ warmup:
 #How many blocks away can a person move before cancelling the teleport,
 #Use -1 to disable feature
 movement:
+  back: 0
+  top: 0
   tpa: 1
   tpo: -1
   tppos: -1
@@ -45,6 +51,8 @@ movement:
 #How many seconds a person is invulnerable to all types of damage after
 #being teleported.
 invulnerability:
+  back: 0
+  top: 0
   tpa: 0
   tpo: 0
   tppos: 0
@@ -58,6 +66,8 @@ invulnerability:
 #Controls how much time must past since the last teleportation
 #before these commands are usable again.
 cooldown:
+  back: 60
+  top: 60
   tpa: 60
   tpo: 0
   tppos: 0
@@ -143,3 +153,4 @@ translation:
   Teleporting: '&6Teleporting...'
   TeleportCancelledCombat: '&cYou have been in combat, wait {delay} seconds.'
   TeleportCancelledCooldown: '&cPlease wait {delay} seconds before teleporting again.'
+  NoValidTop: '&cThere is nowhere above you.'

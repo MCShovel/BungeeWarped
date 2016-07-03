@@ -31,6 +31,11 @@ commands:
         usage: 'Usage: /<command> name'
         permission: bungeewarped.setwarp
         permission-message: '§4You do not have permission to perform this action.'
+    back:
+        description: 'Return to your previous position.'
+        usage: 'Usage: /back'
+        permission: bungeewarped.back
+        permission-message: '§4You do not have permission to perform this action.'
     home:
         aliases: [homes]
         description: 'Teleport to your home.'
@@ -48,6 +53,11 @@ commands:
         description: 'Remove your home by name.'
         usage: 'Usage: /<command> [name]'
         permission: bungeewarped.home
+        permission-message: '§4You do not have permission to perform this action.'
+    top:
+        description: 'Teleport to the topmost block.'
+        usage: 'Usage: /top'
+        permission: bungeewarped.top
         permission-message: '§4You do not have permission to perform this action.'
     tpo:
         description: 'Force teleport a player.'
@@ -121,6 +131,15 @@ permissions:
     bungeewarped.portals.*:
         description: 'Access to all portal locations.'
         default: true
+
+#Misc teleport
+    bungeewarped.top:
+        description: 'Access to the /top command.'
+        default: false
+
+    bungeewarped.back:
+        description: 'Access to the /back command.'
+        default: false
 
 #Warp location perms
     bungeewarped.warp:
