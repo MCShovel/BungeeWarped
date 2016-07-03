@@ -409,10 +409,10 @@ public class MySqlDataStore {
 	}
 
 
-	public NamedDestination findPlayerHome(String playerUuid, String name) {
+	public NamedDestination findPlayerHome(String playerUuid, String playerName, String name) {
 		name = name.toLowerCase();
     	List<NamedDestination> possible = new ArrayList<NamedDestination>();
-		List<NamedDestination> all = getPlayerHomes(playerUuid, null);
+		List<NamedDestination> all = getPlayerHomes(playerUuid, playerName);
 		for(Iterator<NamedDestination> i = all.iterator(); i.hasNext(); ) {
 			NamedDestination test = i.next();
 			if (test.name.toLowerCase().startsWith(name)) {
@@ -457,9 +457,12 @@ public class MySqlDataStore {
 	}
 
 
-	public void deletePlayerHome(String playerUuid, String name) {
+	public void deletePlayerHome(String playerUuid, String playerName, String name) {
 		this.database.execute(
 	    		"DELETE FROM `" + tablePrefix + "homes` \n" +
-	    		"WHERE `bw_playerUUID` = '" + playerUuid + "' AND `bw_name` = '" + name + "';");
+    				(playerUuid != null 
+    					? ("WHERE `bw_playerUUID` = '" + playerUuid + "'")
+    					: ("WHERE `bw_playerName` = '" + String.valueOf(playerName).replaceAll("[^\\w]", "_") + "'")
+    					) + " AND `bw_name` = '" + name + "';");
 	}
 }

@@ -18,13 +18,34 @@ public class CmdDelHome extends BaseCommand {
 
 		String name = "home";
 		PlayerController ctrl = plugin.getPlayerController(player);
+
+		String puuid = ctrl.playerUuid;
+		String pname = ctrl.playerName;
+		
+		if (args.length > 0) {
+			int divide = args[0].indexOf(':');
+			if (divide > 0) {
+				if (!player.hasPermission("bungeewarped.home.others")) {
+					player.sendMessage(plugin.config.NoHomeFoundByName(args[0]));
+					return true;
+				}
+				puuid = null;
+				pname = args[0].substring(0, divide);
+				if (divide + 1 < args[0].length()) {
+					args = new String[] { args[0].substring(divide + 1) };
+				} else {
+					args = new String[0];
+				}
+			}
+		}
+		
 		if (args.length > 0) {
 			name = args[0];
 		}
 		
-		NamedDestination existing = plugin.dataStore.findPlayerHome(ctrl.playerUuid, name);
+		NamedDestination existing = plugin.dataStore.findPlayerHome(puuid, pname, name);
 		if (existing != null) {
-			plugin.dataStore.deletePlayerHome(ctrl.playerUuid, existing.name);
+			plugin.dataStore.deletePlayerHome(puuid, pname, existing.name);
 			player.sendMessage(plugin.config.HomeDelConfirm(existing.name));
 		} else {
 	        player.sendMessage(plugin.config.NoHomeFoundByName(name));

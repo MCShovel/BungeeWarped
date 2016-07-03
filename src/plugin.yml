@@ -32,6 +32,7 @@ commands:
         permission: bungeewarped.setwarp
         permission-message: '§4You do not have permission to perform this action.'
     back:
+        aliases: [return]
         description: 'Return to your previous position.'
         usage: 'Usage: /back'
         permission: bungeewarped.back
@@ -180,7 +181,7 @@ permissions:
         description: 'Access to use home commands.'
         default: true
     bungeewarped.home.others:
-        description: 'Access to list/tp to other player homes.'
+        description: 'Access to list/tp/delete other player homes.'
         default: true
 
     bungeewarped.home.multi.1:

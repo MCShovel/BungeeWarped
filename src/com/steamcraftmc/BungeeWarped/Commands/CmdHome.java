@@ -25,15 +25,37 @@ public class CmdHome extends BaseCommand {
 			return true;
 		}
 		
+		boolean implieduse = true;
+		String puuid = ctrl.playerUuid;
+		String pname = ctrl.playerName;
+		
+		if (args.length > 0) {
+			int divide = args[0].indexOf(':');
+			if (divide > 0) {
+				if (!player.hasPermission("bungeewarped.home.others")) {
+					player.sendMessage(plugin.config.NoHomeFoundByName(args[0]));
+					return true;
+				}
+				implieduse = false;
+				puuid = null;
+				pname = args[0].substring(0, divide);
+				if (divide + 1 < args[0].length()) {
+					args = new String[] { args[0].substring(divide + 1) };
+				} else {
+					args = new String[0];
+				}
+			}
+		}
+		
 		String name;
 		NamedDestination dest;
 		
 		if (args.length == 0) {
-			List<NamedDestination> possible = plugin.dataStore.getPlayerHomes(ctrl.playerUuid, null);
+			List<NamedDestination> possible = plugin.dataStore.getPlayerHomes(puuid, pname);
 			if (possible.size() == 0) {
 				player.sendMessage(plugin.config.NoPlayerHomes());
 			}
-			else if (possible.size() == 1) {
+			else if (implieduse && possible.size() == 1) {
 				dest = possible.get(0);
 				dest.reason = TeleportReason.HOME;
 				ctrl.teleportToDestination(dest);
@@ -56,7 +78,7 @@ public class CmdHome extends BaseCommand {
 			name = args[0];
 		}
 
-		dest = plugin.dataStore.findPlayerHome(ctrl.playerUuid, name);
+		dest = plugin.dataStore.findPlayerHome(puuid, pname, name);
 		if (dest == null) {
 			player.sendMessage(plugin.config.NoHomeFoundByName(name));
 			return true;
