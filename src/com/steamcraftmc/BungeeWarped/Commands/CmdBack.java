@@ -1,8 +1,5 @@
 package com.steamcraftmc.BungeeWarped.Commands;
 
-import java.util.Iterator;
-import java.util.List;
-
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 
@@ -27,11 +24,10 @@ public class CmdBack extends BaseCommand {
 		
 		NamedDestination dest = plugin.dataStore.getPlayerBack(ctrl.playerUuid, ctrl.playerName);
 		if (dest == null) {
-			dest.reason = TeleportReason.BACK;
 			player.sendMessage(plugin.config.NoPlayerBack());
 		}
 
-		dest.reason = TeleportReason.HOME;
+		dest.reason = TeleportReason.BACK;
 		ctrl.teleportToDestination(dest);
 		return true;
 	}
