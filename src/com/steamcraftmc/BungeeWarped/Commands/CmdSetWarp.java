@@ -29,6 +29,11 @@ public class CmdSetWarp extends BaseCommand {
         World world = player.getWorld();
 	    String serverName = plugin.bungeeServerName;
 
+		if (!destName.matches("^\\w+$")) {
+			player.sendMessage(plugin.config.InvalidNameForWarp(destName));
+			return;
+		}
+		
     	plugin.dataStore.addDestination(
     		destName,
     		serverName,

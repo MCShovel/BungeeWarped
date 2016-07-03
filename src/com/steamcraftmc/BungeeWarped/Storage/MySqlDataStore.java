@@ -329,12 +329,55 @@ public class MySqlDataStore {
 	    		"WHERE `bw_name` = '" + name + "';");
 	}
 
-	public List<NamedDestination> getPlayerHomes(String playerUuid) {
+	public void setPlayerBack(String playerUuid, String playerName, NamedDestination loc) {
+		addPlayerHome(playerUuid, playerName, "~back", loc.serverName, loc.worldName, loc.X, loc.Y, loc.Z, loc.pitch, loc.yaw);
+	}
+
+	public NamedDestination getPlayerBack(String playerUuid, String playerName) {
+	    try {
+		    ResultSet result = this.database.select(
+		    		"SELECT `bw_name`, `bw_serverName`, `bw_worldName`, `bw_posX`, `bw_posY`, `bw_posZ`, `bw_pitch`, `bw_yaw` FROM `" + tablePrefix + "homes`" +
+		    				(playerUuid != null 
+		    					? ("WHERE `bw_playerUUID` = '" + playerUuid + "'")
+		    					: ("WHERE `bw_playerName` = '" + String.valueOf(playerName).replaceAll("[^\\w]", "_") + "'")
+		    					) + " AND bw_name = '~back'");
+
+			try {
+				if (result.next()) {
+					int ix = 0;
+					NamedDestination dest = new NamedDestination();
+					dest.name = result.getString(++ix);
+					dest.serverName = result.getString(++ix);
+					dest.worldName = result.getString(++ix);
+					dest.X = result.getDouble(++ix);
+					dest.Y = result.getDouble(++ix);
+					dest.Z = result.getDouble(++ix);
+					dest.pitch = (float)result.getDouble(++ix);
+					dest.yaw = (float)result.getDouble(++ix);
+					dest.reason = TeleportReason.BACK;
+					return dest;
+				}
+			}
+			finally {
+				result.close();
+			}
+			
+		} catch (SQLException e1) {
+        	plugin.log(Level.SEVERE, "SQLException! " + e1.getMessage());
+		}
+	    
+	    return null;
+	}
+
+	public List<NamedDestination> getPlayerHomes(String playerUuid, String playerName) {
 		List<NamedDestination> all = new ArrayList<NamedDestination>();
 	    try {
 		    ResultSet result = this.database.select(
 		    		"SELECT `bw_name`, `bw_serverName`, `bw_worldName`, `bw_posX`, `bw_posY`, `bw_posZ`, `bw_pitch`, `bw_yaw` FROM `" + tablePrefix + "homes`" +
-		    		"WHERE `bw_playerUUID` = '" + playerUuid + "';");
+		    				(playerUuid != null 
+		    					? ("WHERE `bw_playerUUID` = '" + playerUuid + "';")
+		    					: ("WHERE `bw_playerName` = '" + String.valueOf(playerName).replaceAll("[^\\w]", "_") + "';")
+		    					));
 
 			try {
 				while (result.next()) {
@@ -349,7 +392,9 @@ public class MySqlDataStore {
 					dest.pitch = (float)result.getDouble(++ix);
 					dest.yaw = (float)result.getDouble(++ix);
 					dest.reason = TeleportReason.HOME;
-					all.add(dest);
+					if (!dest.name.startsWith("~")) {
+						all.add(dest);
+					}
 				}
 			}
 			finally {
@@ -367,7 +412,7 @@ public class MySqlDataStore {
 	public NamedDestination findPlayerHome(String playerUuid, String name) {
 		name = name.toLowerCase();
     	List<NamedDestination> possible = new ArrayList<NamedDestination>();
-		List<NamedDestination> all = getPlayerHomes(playerUuid);
+		List<NamedDestination> all = getPlayerHomes(playerUuid, null);
 		for(Iterator<NamedDestination> i = all.iterator(); i.hasNext(); ) {
 			NamedDestination test = i.next();
 			if (test.name.toLowerCase().startsWith(name)) {
@@ -382,8 +427,9 @@ public class MySqlDataStore {
 
 	public void addPlayerHome(String playerUuid, String playerName,
 			String name, String serverName, String worldName, 
-			int x, int y, int z, float pitch, double yaw) {
+			double x, double y, double z, float pitch, float yaw) {
 
+		playerName = String.valueOf(playerName).replaceAll("[^\\w]", "_");
     	this.database.execute(
 			"INSERT INTO `" + tablePrefix + "homes` \n" +
     			"(`bw_playerUUID`, `bw_playerName`, `bw_name`, `bw_serverName`, `bw_worldName`, `bw_posX`, `bw_posY`, `bw_posZ`, `bw_pitch`, `bw_yaw`) \n" +
@@ -416,5 +462,4 @@ public class MySqlDataStore {
 	    		"DELETE FROM `" + tablePrefix + "homes` \n" +
 	    		"WHERE `bw_playerUUID` = '" + playerUuid + "' AND `bw_name` = '" + name + "';");
 	}
-
 }

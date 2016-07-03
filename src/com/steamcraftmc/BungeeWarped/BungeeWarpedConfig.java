@@ -430,4 +430,21 @@ public class BungeeWarpedConfig {
 		String message = getText("NoValidTop", "&cThere is nowhere above you.");
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
+
+	public String NoPlayerBack() {
+		String message = getText("NoPlayerBack", "&cYou do not have a location to return to.");
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String InvalidNameForHome(String name) {
+		String message = getText("InvalidNameForHome", "&cSorry that name is not valid, use a-z or 0-9 only.");
+		message = message.replace("{name}", String.valueOf(name));
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	public String InvalidNameForWarp(String name) {
+		String message = getText("InvalidNameForWarp", "&cSorry that name is not valid, use a-z or 0-9 only.");
+		message = message.replace("{name}", String.valueOf(name));
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
 }

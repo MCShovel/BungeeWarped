@@ -154,3 +154,6 @@ translation:
   TeleportCancelledCombat: '&cYou have been in combat, wait {delay} seconds.'
   TeleportCancelledCooldown: '&cPlease wait {delay} seconds before teleporting again.'
   NoValidTop: '&cThere is nowhere above you.'
+  NoPlayerBack: '&cYou do not have a location to return to.'
+  InvalidNameForHome: '&cSorry that name is not valid, use a-z or 0-9 only.'
+  InvalidNameForWarp: '&cSorry that name is not valid, use a-z or 0-9 only.'

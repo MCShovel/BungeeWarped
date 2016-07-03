@@ -29,7 +29,7 @@ public class CmdHome extends BaseCommand {
 		NamedDestination dest;
 		
 		if (args.length == 0) {
-			List<NamedDestination> possible = plugin.dataStore.getPlayerHomes(ctrl.playerUuid);
+			List<NamedDestination> possible = plugin.dataStore.getPlayerHomes(ctrl.playerUuid, null);
 			if (possible.size() == 0) {
 				player.sendMessage(plugin.config.NoPlayerHomes());
 			}

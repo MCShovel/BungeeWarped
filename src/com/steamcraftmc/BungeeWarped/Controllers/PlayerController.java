@@ -137,9 +137,15 @@ public class PlayerController {
 		}
 	}
 	
+	public void storeBackLocation() {
+        if (this.player.hasPermission("bungeewarped.back")) {
+        	plugin.dataStore.setPlayerBack(playerUuid, playerName, NamedDestination.create(plugin, "~back", player.getLocation(), TeleportReason.BACK));
+        }
+	}
 
 	public void teleportToDestinationNow(NamedDestination dest) {
-	
+		storeBackLocation();
+		
 		this.lastTpTime = System.currentTimeMillis();
 		player.sendMessage(plugin.config.Teleporting());
         if (dest.serverName == null || dest.serverName.equalsIgnoreCase(plugin.getServerName())) {
@@ -169,7 +175,7 @@ public class PlayerController {
 	public void setHome(String name, Location location) {
 		plugin.dataStore.addPlayerHome(playerUuid, playerName, 
 				name, plugin.getServerName(), location.getWorld().getName(),
-				location.getBlockX(), location.getBlockY(), location.getBlockZ(), 
+				location.getX(), location.getY(), location.getZ(), 
 				location.getPitch(), location.getYaw());
 	}
 

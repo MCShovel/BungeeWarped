@@ -22,6 +22,11 @@ public class CmdTop extends BaseCommand {
 
 	@Override
 	protected boolean doCommand(Player player, PlayerController state, Command cmd, String[] args) {
+
+		PlayerController ctrl = plugin.getPlayerController(player);
+		if (!ctrl.verifyCooldownForTp(TeleportReason.TOP, true)) {
+			return true;
+		}
 		
 		Location ploc = player.getLocation();
 		World world = player.getWorld();

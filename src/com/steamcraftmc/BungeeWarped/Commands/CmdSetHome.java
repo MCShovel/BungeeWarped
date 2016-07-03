@@ -25,8 +25,13 @@ public class CmdSetHome extends BaseCommand {
 			name = args[0];
 		}
 		
+		if (!name.matches("^\\w+$")) {
+			player.sendMessage(plugin.config.InvalidNameForHome(name));
+			return true;
+		}
+		
 		boolean replace = false;
-		List<NamedDestination> existing = plugin.dataStore.getPlayerHomes(ctrl.playerUuid);
+		List<NamedDestination> existing = plugin.dataStore.getPlayerHomes(ctrl.playerUuid, null);
 		for(Iterator<NamedDestination> i = existing.iterator(); i.hasNext(); ) {
 			NamedDestination dest = i.next();
 			if (dest.name.equalsIgnoreCase(name)) {
