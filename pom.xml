@@ -29,14 +29,14 @@
             <artifactId>bukkit</artifactId>
             <version>1.9-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>/opt/msm/src/spigot/craftbukkit.jar</systemPath>
+            <systemPath>${basedir}/../spigot/craftbukkit.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
             <version>14.6</version>
             <scope>system</scope>
-            <systemPath>/opt/msm/plugins/worldedit-bukkit/worldedit-bukkit.jar</systemPath>
+            <systemPath>${basedir}/../../plugins/worldedit-bukkit/worldedit-bukkit.jar</systemPath>
         </dependency>
     </dependencies>
 
