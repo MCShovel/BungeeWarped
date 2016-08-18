@@ -18,6 +18,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 
 public class EventListener implements Listener {
@@ -27,7 +28,13 @@ public class EventListener implements Listener {
     public EventListener(BungeeWarpedBukkitPlugin plugin) {
         this.plugin = plugin;
     }
-    
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onGetPlayerSpawnLocation(PlayerSpawnLocationEvent e) {
+    	Player player = e.getPlayer();
+		plugin.getPlayerController(player).onPlayerSpawn(e);
+    }
+
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerJoinEvent(PlayerJoinEvent e) {
 		this.plugin.registerPlayerJoined(e.getPlayer());

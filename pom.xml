@@ -25,11 +25,11 @@
     <!-- Dependencies -->
     <dependencies>
         <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
             <version>1.9-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>${basedir}/../spigot/craftbukkit.jar</systemPath>
+            <systemPath>${basedir}/../spigot/spigot.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>

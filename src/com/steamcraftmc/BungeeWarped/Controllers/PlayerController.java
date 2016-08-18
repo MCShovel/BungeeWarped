@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import com.steamcraftmc.BungeeWarped.BungeeWarpedBukkitPlugin;
 import com.steamcraftmc.BungeeWarped.Storage.NamedDestination;
@@ -49,6 +50,13 @@ public class PlayerController {
 		if (loc != null) {
 			teleportToLocation(loc);
 		    plugin.dataStore.removePlayerJoinLocation(this.playerUuid);
+		}
+	}
+
+	public void onPlayerSpawn(PlayerSpawnLocationEvent e) {
+		NamedDestination loc = plugin.dataStore.getPlayerJoinLocation(this.playerUuid);
+		if (loc != null) {
+			e.setSpawnLocation(loc.toPlayerLocation());
 		}
 	}
 
