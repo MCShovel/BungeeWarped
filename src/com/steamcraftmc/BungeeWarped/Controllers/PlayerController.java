@@ -6,6 +6,8 @@ import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
@@ -18,26 +20,26 @@ import com.steamcraftmc.BungeeWarped.Tasks.PendingTpaRequest;
 import com.steamcraftmc.BungeeWarped.Tasks.PlayerTeleportDelay;
 
 public class PlayerController {
-    private final BungeeWarpedBukkitPlugin plugin;
-    public Player player;
-    public final String playerName;
-    public final String playerUuid;
+	private final BungeeWarpedBukkitPlugin plugin;
+	public Player player;
+	public final String playerName;
+	public final String playerUuid;
 
 	public long joinTime;
 	public long lastTpTime;
 	public long lastCombat;
 	public long invulnerableUntil;
-	
+
 	public boolean isInsidePortal;
-	
+
 	private PendingTpaRequest pendingRequest;
 	public boolean ignoreRequests;
 
 	public PlayerController(BungeeWarpedBukkitPlugin plugin, Player player) {
-        this.plugin = plugin;
-        this.player = player;
-        this.playerName = player.getName();
-        this.playerUuid = player.getUniqueId().toString();
+		this.plugin = plugin;
+		this.player = player;
+		this.playerName = player.getName();
+		this.playerUuid = player.getUniqueId().toString();
 	}
 
 	public void onPlayerJoin() {
@@ -45,11 +47,11 @@ public class PlayerController {
 		invulnerableUntil = lastTpTime + (plugin.config.invulnerabilityOnJoin() * 1000);
 		isInsidePortal = true;
 		pendingRequest = null;
-		
+
 		NamedDestination loc = plugin.dataStore.getPlayerJoinLocation(this.playerUuid);
 		if (loc != null) {
 			teleportToLocation(loc);
-		    plugin.dataStore.removePlayerJoinLocation(this.playerUuid);
+			plugin.dataStore.removePlayerJoinLocation(this.playerUuid);
 		}
 	}
 
@@ -67,26 +69,24 @@ public class PlayerController {
 	public void onCombatTag() {
 		this.lastCombat = System.currentTimeMillis();
 	}
-	
+
 	public boolean canDamagePlayer() {
 		return invulnerableUntil < System.currentTimeMillis();
 	}
-	
+
 	public void stepIntoPortal(boolean isInPortal, String destination) {
 		if (!this.isInsidePortal && isInPortal) {
 			this.isInsidePortal = true;
 
 			if (!player.hasPermission("bungeewarped.portals.*")
-			    && !player.hasPermission("bungeewarped.portals." + destination.toLowerCase())) {
-	    	    player.sendMessage(plugin.config.NoPortalAccess(destination));
-	    	    return;
+					&& !player.hasPermission("bungeewarped.portals." + destination.toLowerCase())) {
+				player.sendMessage(plugin.config.NoPortalAccess(destination));
+				return;
 			}
 			teleportToDestinationName(destination, TeleportReason.PORTAL);
-		}
-		else if (this.isInsidePortal && !isInPortal) {
+		} else if (this.isInsidePortal && !isInPortal) {
 			this.isInsidePortal = false;
-		}
-		else {
+		} else {
 			// nothing to do...
 		}
 	}
@@ -98,93 +98,119 @@ public class PlayerController {
 		}
 		this.lastTpTime = System.currentTimeMillis();
 		invulnerableUntil = lastTpTime + (plugin.config.invulnerabilityTime(dest.reason) * 1000);
-	    player.teleport(loc, TeleportCause.PLUGIN);
+
+		safeTeleport(loc, TeleportCause.PLUGIN);
+	}
+
+	private void safeTeleport(Location loc, TeleportCause cause) {
+		try {
+			boolean obstructed = false;
+			Block head, foot = loc.getBlock();
+			while (foot != null) {
+				head = foot.getRelative(0, 1, 0);
+				if (foot.getType() == Material.AIR && head.getType() == Material.AIR) {
+					break;
+				}
+				plugin.log(Level.INFO, "Obstruction: y" + foot.getY() + " found " + foot.getType() + ", " + head.getType());
+				obstructed = true;
+				foot = head;
+			}
+			loc = loc.clone();
+			if (foot != null) {
+				if (obstructed) {
+					player.sendMessage(ChatColor.RED + "The destination at (y" + loc.getY()
+							+ ") is obstructed, teleporting to (y" + foot.getY() + ").");
+				}
+				loc.setY(foot.getY());
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		player.teleport(loc, cause);
 	}
 
 	public void teleportToDestinationName(String destName, TeleportReason reason) {
-    	NamedDestination dest = plugin.dataStore.getDestination(destName);
+		NamedDestination dest = plugin.dataStore.getDestination(destName);
 
-        if (dest == null || dest.name == null) {
-        	player.sendMessage(ChatColor.RED + "The destination does not exist.");
-        	return;
-        }
-        
-    	if(reason == TeleportReason.PORTAL) {
-        	if (!player.hasPermission("bungeewarped.portals.*") && !player.hasPermission("bungeewarped.portals." + dest.name.toLowerCase())) {
-	    	    player.sendMessage(plugin.config.NoPortalAccess(dest.name));
-	            return;
-        	}
-        }
-        else if(reason == TeleportReason.WARP) { 
-        	if (!player.hasPermission("bungeewarped.warps.*") && !player.hasPermission("bungeewarped.warps." + dest.name.toLowerCase())) {
-	    	    player.sendMessage(plugin.config.NoPortalAccess(dest.name));
-	            return;
-        	}
-        }
-        else {
-    	    player.sendMessage(plugin.config.NoPortalAccess(dest.name));
-            return;
-        }
+		if (dest == null || dest.name == null) {
+			player.sendMessage(ChatColor.RED + "The destination does not exist.");
+			return;
+		}
 
-    	dest.reason = reason;
-    	teleportToDestination(dest);
-    }
+		if (reason == TeleportReason.PORTAL) {
+			if (!player.hasPermission("bungeewarped.portals.*")
+					&& !player.hasPermission("bungeewarped.portals." + dest.name.toLowerCase())) {
+				player.sendMessage(plugin.config.NoPortalAccess(dest.name));
+				return;
+			}
+		} else if (reason == TeleportReason.WARP) {
+			if (!player.hasPermission("bungeewarped.warps.*")
+					&& !player.hasPermission("bungeewarped.warps." + dest.name.toLowerCase())) {
+				player.sendMessage(plugin.config.NoPortalAccess(dest.name));
+				return;
+			}
+		} else {
+			player.sendMessage(plugin.config.NoPortalAccess(dest.name));
+			return;
+		}
+
+		dest.reason = reason;
+		teleportToDestination(dest);
+	}
 
 	public void teleportToDestination(NamedDestination dest) {
 		if (dest.reason != TeleportReason.TPO && dest.reason != TeleportReason.TPPOS) {
-			
+
 			if (dest.reason == TeleportReason.TPA && !canTeleportToWorld(dest)) {
 				player.sendMessage(plugin.config.NotAllowedCrossWorld(player.getWorld().getName(), dest.worldName));
 				return;
 			}
-			
+
 			new PlayerTeleportDelay(plugin, this, dest).start();
-		}
-		else {
+		} else {
 			teleportToDestinationNow(dest);
 		}
 	}
-	
+
 	public void storeBackLocation() {
-        if (this.player.hasPermission("bungeewarped.back")) {
-        	plugin.dataStore.setPlayerBack(playerUuid, playerName, NamedDestination.create(plugin, "~back", player.getLocation(), TeleportReason.BACK));
-        }
+		if (this.player.hasPermission("bungeewarped.back")) {
+			plugin.dataStore.setPlayerBack(playerUuid, playerName,
+					NamedDestination.create(plugin, "~back", player.getLocation(), TeleportReason.BACK));
+		}
 	}
 
 	public void teleportToDestinationNow(NamedDestination dest) {
 		storeBackLocation();
-		
+
 		this.lastTpTime = System.currentTimeMillis();
 		player.sendMessage(plugin.config.Teleporting());
-        if (dest.serverName == null || dest.serverName.equalsIgnoreCase(plugin.getServerName())) {
-        	teleportToLocation(dest);
-        	return;
-        }
+		if (dest.serverName == null || dest.serverName.equalsIgnoreCase(plugin.getServerName())) {
+			teleportToLocation(dest);
+			return;
+		}
 
-        plugin.dataStore.saveTeleportDestination(playerUuid, dest);
-        sendToServer(dest.serverName);
-    }
+		plugin.dataStore.saveTeleportDestination(playerUuid, dest);
+		sendToServer(dest.serverName);
+	}
 
 	public void sendToServer(String serverName) {
-    	try {
-	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	        DataOutputStream dos = new DataOutputStream(baos);
-	        dos.writeUTF("Connect");
+		try {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			DataOutputStream dos = new DataOutputStream(baos);
+			dos.writeUTF("Connect");
 			dos.writeUTF(serverName);
-	        player.sendPluginMessage(plugin, "BungeeCord", baos.toByteArray());
-	        baos.close();
-	        dos.close();
-    	}
-    	catch (Exception e) {
-        	plugin.log(Level.SEVERE, "Exception! " + e.toString());
-    	}
+			player.sendPluginMessage(plugin, "BungeeCord", baos.toByteArray());
+			baos.close();
+			dos.close();
+		} catch (Exception e) {
+			plugin.log(Level.SEVERE, "Exception! " + e.toString());
+		}
 	}
-	
+
 	public void setHome(String name, Location location) {
-		plugin.dataStore.addPlayerHome(playerUuid, playerName, 
-				name, plugin.getServerName(), location.getWorld().getName(),
-				location.getX(), location.getY(), location.getZ(), 
-				location.getPitch(), location.getYaw());
+		plugin.dataStore.addPlayerHome(playerUuid, playerName, name, plugin.getServerName(),
+				location.getWorld().getName(), location.getX(), location.getY(), location.getZ(), location.getPitch(),
+				location.getYaw());
 	}
 
 	public boolean completePendingRequest(PendingRequestState state) {
@@ -207,35 +233,35 @@ public class PlayerController {
 			return true;
 		}
 	}
-	
+
 	private int checkCombatDelay(int combatDelay) {
 		long now = System.currentTimeMillis();
 		long exp = lastCombat + (combatDelay * 1000);
-		if (now > exp) 
+		if (now > exp)
 			return 0;
-		return (int)((exp - now) / 1000);
+		return (int) ((exp - now) / 1000);
 	}
 
 	private int checkCooldownTime(int cooldown) {
 		long now = System.currentTimeMillis();
 		long exp = lastTpTime + (cooldown * 1000);
-		if (now > exp) 
+		if (now > exp)
 			return 0;
-		return (int)((exp - now) / 1000);
+		return (int) ((exp - now) / 1000);
 	}
-	
+
 	public boolean verifyCooldownForTp(TeleportReason reason, boolean notify) {
 		int cooldown = plugin.config.getTpCooldownTime(reason);
 		int combatDelay = plugin.config.getCombatDelay(reason);
 
 		if (player.hasPermission("bungeewarped.bypass.*")
-			|| player.hasPermission("bungeewarped.bypass." + reason.toString().toLowerCase())) {
+				|| player.hasPermission("bungeewarped.bypass." + reason.toString().toLowerCase())) {
 			cooldown = 0;
 		}
 		if (player.hasPermission("bungeewarped.bypass.*") || player.hasPermission("bungeewarped.bypass.combat")) {
 			combatDelay = 0;
 		}
-		
+
 		if (combatDelay > 0) {
 			int waitTime = checkCombatDelay(combatDelay);
 			if (waitTime > 0) {
@@ -252,7 +278,7 @@ public class PlayerController {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 
