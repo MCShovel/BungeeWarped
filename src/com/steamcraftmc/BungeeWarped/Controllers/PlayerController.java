@@ -99,30 +99,20 @@ public class PlayerController {
 		this.lastTpTime = System.currentTimeMillis();
 		invulnerableUntil = lastTpTime + (plugin.config.invulnerabilityTime(dest.reason) * 1000);
 
-		safeTeleport(loc, TeleportCause.PLUGIN);
+		safeTeleport(loc, dest.reason, TeleportCause.PLUGIN);
 	}
 
-	private void safeTeleport(Location loc, TeleportCause cause) {
+	private void safeTeleport(Location loc, TeleportReason reason, TeleportCause cause) {
 		try {
-			boolean obstructed = false;
 			Block head, foot = loc.getBlock();
-			while (foot != null) {
-				head = foot.getRelative(0, 1, 0);
-				if (foot.getType() == Material.AIR && head.getType() == Material.AIR) {
-					break;
-				}
-				plugin.log(Level.INFO, "Obstruction: y" + foot.getY() + " found " + foot.getType() + ", " + head.getType());
-				obstructed = true;
-				foot = head;
+			head = foot.getRelative(0, 1, 0);
+			if (reason == TeleportReason.PORTAL || reason == TeleportReason.WARP) {
+				if (foot.getType() != Material.AIR)
+					foot.setType(Material.AIR);
+				if (head.getType() != Material.AIR)
+					head.setType(Material.AIR);
 			}
 			loc = loc.clone();
-			if (foot != null) {
-				if (obstructed) {
-					player.sendMessage(ChatColor.RED + "The destination at (y" + loc.getY()
-							+ ") is obstructed, teleporting to (y" + foot.getY() + ").");
-				}
-				loc.setY(foot.getY());
-			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
