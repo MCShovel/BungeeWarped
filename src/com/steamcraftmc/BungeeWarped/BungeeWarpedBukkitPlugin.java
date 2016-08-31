@@ -90,7 +90,7 @@ public class BungeeWarpedBukkitPlugin extends JavaPlugin implements PluginMessag
     }
 
     public void log(Level severity, String text) {
-        logger.log(severity, "[BungeeWarped] " + text);
+        logger.log(severity, text);
     }
 
 	public void reload() {
@@ -129,9 +129,9 @@ public class BungeeWarpedBukkitPlugin extends JavaPlugin implements PluginMessag
 
 		if (subchannel.equals("GetServer")) {
 			String name = in.readUTF();
-			if (name != null) {
+			if (name != null && !name.equals(this.bungeeServerName)) {
 				this.bungeeServerName = name;
-				log(Level.FINER, "Received bungee server name: " + name);
+				log(Level.INFO, "Bungee Server: " + name);
 	    		this.getPlayerController(player).onPlayerJoin();
 			}
 		} else if (subchannel.equals("BungeeWarped")) {
@@ -164,7 +164,6 @@ public class BungeeWarpedBukkitPlugin extends JavaPlugin implements PluginMessag
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public void sendPlayerMessage(Player sender, String player, String command, String[] arguments) {
 		
 		Player target = Bukkit.getServer().getPlayerExact(player);
@@ -183,7 +182,7 @@ public class BungeeWarpedBukkitPlugin extends JavaPlugin implements PluginMessag
         try {
             long time = System.currentTimeMillis();
             this.portalData = dataStore.getPortalBlocks();
-            log(Level.INFO, "Portal data loaded! (" + (System.currentTimeMillis() - time) + "ms)");
+            log(Level.FINE, "Portal data loaded! (" + (System.currentTimeMillis() - time) + "ms)");
         } catch (Exception e) {
             log(Level.SEVERE, "Load Failed: " + e.toString());
         	this.portalData = new HashMap<>();

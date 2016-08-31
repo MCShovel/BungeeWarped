@@ -21,7 +21,7 @@ public class RequestServerName implements Runnable {
 	@Override
 	public void run() {
 		if (!player.isOnline()) return;
-		plugin.log(Level.INFO, "Sending message: GetServer");
+		plugin.log(Level.FINE, "Sending message: GetServer");
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("GetServer");
         player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
