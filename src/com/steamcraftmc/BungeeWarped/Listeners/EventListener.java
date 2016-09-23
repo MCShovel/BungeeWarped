@@ -8,6 +8,7 @@ import com.steamcraftmc.BungeeWarped.Controllers.PlayerController;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,6 +19,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.projectiles.ProjectileSource;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 
@@ -77,8 +79,10 @@ public class EventListener implements Listener {
 	public void onEntityDamageEvent(EntityDamageEvent event) {
 		if(event.getEntity() instanceof Player) {
         	Player player = (Player) event.getEntity();
+        	PlayerController ctrl = plugin.getPlayerController(player);
         	
-        	boolean isPlayerImmune = false == plugin.getPlayerController(player).canDamagePlayer();
+        	boolean isPlayerImmune = false == ctrl.canDamagePlayer();
+    		//plugin.log(Level.INFO, player.getName() + " is immune = " + isPlayerImmune); 
         	if (isPlayerImmune) {
         		event.setCancelled(true);
         		plugin.log(Level.FINEST, "Player " + player.getName() + " is immune to damage from: " + event.getCause());
@@ -87,12 +91,24 @@ public class EventListener implements Listener {
         	if (event instanceof EntityDamageByEntityEvent)
         	{
 	        	Entity eattck = ((EntityDamageByEntityEvent)event).getDamager();
+	        	
+	        	if (eattck instanceof org.bukkit.entity.Arrow) {
+	        		ProjectileSource shooter = ((org.bukkit.entity.Arrow)eattck).getShooter();
+	        		if (shooter instanceof LivingEntity) {
+	        			eattck = (Entity)shooter;
+	        		}
+	        	}
+	        	
+	        	
+	        	if (eattck != null && eattck instanceof LivingEntity) {
+	        		ctrl.onDamageByEntity();
+	        	}
 				if (eattck != null && eattck instanceof Player) {
-					Player attacker = (Player)eattck;
-					plugin.getPlayerController(player).onCombatTag();
-					plugin.getPlayerController(attacker).onCombatTag();
+					PlayerController attacker = plugin.getPlayerController((Player)eattck);
+					ctrl.onCombatTag();
+					attacker.onCombatTag();
 	
-					if (!plugin.getPlayerController(attacker).canDamagePlayer()) {
+					if (!attacker.canDamagePlayer()) {
 		        		event.setCancelled(true);
 					}
 				}

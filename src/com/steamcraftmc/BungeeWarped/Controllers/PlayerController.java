@@ -28,6 +28,7 @@ public class PlayerController {
 	public long joinTime;
 	public long lastTpTime;
 	public long lastCombat;
+	public long lastDamageTime;
 	public long invulnerableUntil;
 
 	public boolean isInsidePortal;
@@ -68,6 +69,10 @@ public class PlayerController {
 
 	public void onCombatTag() {
 		this.lastCombat = System.currentTimeMillis();
+	}
+	
+	public void onDamageByEntity() {
+		this.lastDamageTime = System.currentTimeMillis();
 	}
 
 	public boolean canDamagePlayer() {

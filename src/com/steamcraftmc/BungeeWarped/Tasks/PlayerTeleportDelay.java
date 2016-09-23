@@ -20,6 +20,7 @@ public class PlayerTeleportDelay implements Runnable {
 	private int taskId;
 	private Block startedAt;
 	private int movementAllowed;
+	private final long startTime;
 	private boolean startmsg;
 
 	public PlayerTeleportDelay(BungeeWarpedBukkitPlugin plugin, PlayerController ctrl, NamedDestination dest) {
@@ -31,6 +32,7 @@ public class PlayerTeleportDelay implements Runnable {
 		this.delay = plugin.config.getTpWarmupTime(dest.reason);
 		this.effects = plugin.config.getTpEffects(dest.reason);
 		this.effectStrength = 1;
+		this.startTime = System.currentTimeMillis();
 		
 		if (ctrl.player.hasPermission("bungeewarped.bypass.*")
 			|| ctrl.player.hasPermission("bungeewarped.bypass." + dest.reason.toString().toLowerCase())) {
@@ -59,6 +61,11 @@ public class PlayerTeleportDelay implements Runnable {
 			return;
 		}
 		
+		if (playerCtrl.lastDamageTime > this.startTime || playerCtrl.lastCombat > this.startTime) {
+			Bukkit.getScheduler().cancelTask(taskId);
+			playerCtrl.player.sendMessage(plugin.config.TeleportCancelled());
+			return;
+		}
 		if (this.movementAllowed >= 0) {
 			Block curr = playerCtrl.player.getLocation().getBlock();
 			int dist = Math.max(
