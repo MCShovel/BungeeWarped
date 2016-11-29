@@ -77,6 +77,8 @@ public class TpaRequestHandler implements Runnable, PendingTpaRequest {
 			taskId = -1;
 		}
 		
+		this.state = state;
+		
 		if (state == PendingRequestState.ACCEPT) {
 			if (directionHere) {
 				plugin.sendPlayerMessage(player, fromPlayer, "TpaResponse", 
